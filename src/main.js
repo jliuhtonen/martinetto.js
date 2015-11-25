@@ -1,3 +1,5 @@
 import routeParser from './parser'
 
-routeParser()
+export default {
+  'Parser': routeParser
+}
