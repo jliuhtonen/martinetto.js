@@ -1,4 +1,5 @@
 import {zip, and} from './utils'
+import escapeStringRegexp from 'escape-string-regexp'
 
 const tokenSeparator = '/'
 const namedParamPattern = /^:\w+$/
@@ -7,17 +8,24 @@ const defaultNamedParamValidationPattern = /^\w+$/
 function parseRoute(path, prefix = '') {
   const pathToParse = pathWithoutPrefix(path, prefix)
   const routeTokens = asTokens(pathToParse)
+  const routeRegExp = new RegExp(toPattern(routeTokens))
+  console.log(routeRegExp)
+  const expectedParamTokens = routeTokens
+    .filter(token => token.type === 'pathParam')
+    .map(token => token.value)
 
   return function(locationStr) {
-    const strTokens = asTokens(locationStr)
-    const strMatchTokens = strTokens.filter(token => token.type === 'literal')
+    const paramMatches = locationStr.match(routeRegExp)
+    const isMatch = !!paramMatches
 
-    if(!compareTokens(routeTokens, strMatchTokens)) {
-      return { isMatch: false }
+    if(!isMatch) {
+      return null
     } else {
+      const paramValues = paramMatches.splice(1)
+      const params = toPathParamsObject(expectedParamTokens, paramValues)
       return {
-        isMatch: true,
-        params: getParams(routeTokens, strTokens)
+        path: locationStr,
+        params
       }
     }
   }
@@ -35,52 +43,31 @@ function asTokens(path) {
     .map(stringToToken)
 }
 
+function toPattern(routeTokens) {
+  return routeTokens.map(token => token.pattern).join(escapeStringRegexp(tokenSeparator))
+}
+
 function stringToToken(part) {
   if(part.match(namedParamPattern)) {
     return {
       type: 'pathParam',
-      value: part.substring(1)
+      value: part.substring(1),
+      pattern: '(\\w+)'
     }
   } else {
     return {
       type: 'literal',
-      value: part
+      value: part,
+      pattern: escapeStringRegexp(part)
     }
   }
 }
 
-function compareTokens(routeTokens, locationTokens, namedParamValidationPattern = defaultNamedParamValidationPattern) {
-  if(routeTokens.length !== locationTokens.length) {
-    return false
-  }
-
-  const zippedTokens = zip(routeTokens, locationTokens)
-  console.log(zippedTokens)
-  const tokenMatches = zippedTokens.map(([routeToken, locationToken]) => tokenMatch(routeToken, locationToken, namedParamValidationPattern))
-  console.log(tokenMatches)
-  return and(tokenMatches)
-}
-
-function tokenMatch(routeToken, locationToken, validPathParamPattern) {
-  if(routeToken.type === 'pathParam') {
-    return !!locationToken.value.match(validPathParamPattern)
-  } else {
-    return locationToken.value === routeToken.value
-  }
-}
-
-function getParams(routeTokens, locationTokens) {
-  return routeTokens.reduce((params, routeToken, index) => {
-    if(routeToken.type === 'pathParam') {
-      params[routeToken.value] = locationTokens[index].value
-    }
-
+function toPathParamsObject(expectedParams, paramValues) {
+  return zip(expectedParams, paramValues).reduce((params, [key, value]) => {
+    params[key] = value
     return params
   }, {})
-}
-
-function pathParamName(pathParam) {
-  return pathParam.substring(1)
 }
 
 export default parseRoute

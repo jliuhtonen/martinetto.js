@@ -8,7 +8,7 @@ export function zip(a1, a2, acc = []) {
 
   if(typeof a1Head === 'undefined' && typeof a2Head === 'undefined') {
     return acc
+  } else {
+    return zip(a1Tail, a2Tail, acc.concat([[a1Head, a2Head]]))
   }
-
-  return zip(a1Tail, a2Tail, acc.concat([[a1Head, a2Head]]))
 }

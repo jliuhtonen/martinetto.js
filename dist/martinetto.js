@@ -66,6 +66,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	console.log((0, _parser2.default)('/foo/:bar')('/foo/123'));
+
 	exports.default = {
 	  'Parser': _parser2.default
 	};
@@ -84,6 +86,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _utils = __webpack_require__(2);
 
+	var _escapeStringRegexp = __webpack_require__(3);
+
+	var _escapeStringRegexp2 = _interopRequireDefault(_escapeStringRegexp);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 	var tokenSeparator = '/';
 	var namedParamPattern = /^:\w+$/;
 	var defaultNamedParamValidationPattern = /^\w+$/;
@@ -93,19 +101,26 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  var pathToParse = pathWithoutPrefix(path, prefix);
 	  var routeTokens = asTokens(pathToParse);
+	  var routeRegExp = new RegExp(toPattern(routeTokens));
+	  console.log(routeRegExp);
+	  var expectedParamTokens = routeTokens.filter(function (token) {
+	    return token.type === 'pathParam';
+	  }).map(function (token) {
+	    return token.value;
+	  });
 
 	  return function (locationStr) {
-	    var strTokens = asTokens(locationStr);
-	    var strMatchTokens = strTokens.filter(function (token) {
-	      return token.type === 'literal';
-	    });
+	    var paramMatches = locationStr.match(routeRegExp);
+	    var isMatch = !!paramMatches;
 
-	    if (!compareTokens(routeTokens, strMatchTokens)) {
-	      return { isMatch: false };
+	    if (!isMatch) {
+	      return null;
 	    } else {
+	      var paramValues = paramMatches.splice(1);
+	      var params = toPathParamsObject(expectedParamTokens, paramValues);
 	      return {
-	        isMatch: true,
-	        params: getParams(routeTokens, strTokens)
+	        path: locationStr,
+	        params: params
 	      };
 	    }
 	  };
@@ -122,60 +137,38 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }).map(stringToToken);
 	}
 
+	function toPattern(routeTokens) {
+	  return routeTokens.map(function (token) {
+	    return token.pattern;
+	  }).join((0, _escapeStringRegexp2.default)(tokenSeparator));
+	}
+
 	function stringToToken(part) {
 	  if (part.match(namedParamPattern)) {
 	    return {
 	      type: 'pathParam',
-	      value: part.substring(1)
+	      value: part.substring(1),
+	      pattern: '(\\w+)'
 	    };
 	  } else {
 	    return {
 	      type: 'literal',
-	      value: part
+	      value: part,
+	      pattern: (0, _escapeStringRegexp2.default)(part)
 	    };
 	  }
 	}
 
-	function compareTokens(routeTokens, locationTokens) {
-	  var namedParamValidationPattern = arguments.length <= 2 || arguments[2] === undefined ? defaultNamedParamValidationPattern : arguments[2];
-
-	  if (routeTokens.length !== locationTokens.length) {
-	    return false;
-	  }
-
-	  var zippedTokens = (0, _utils.zip)(routeTokens, locationTokens);
-	  console.log(zippedTokens);
-	  var tokenMatches = zippedTokens.map(function (_ref) {
+	function toPathParamsObject(expectedParams, paramValues) {
+	  return (0, _utils.zip)(expectedParams, paramValues).reduce(function (params, _ref) {
 	    var _ref2 = _slicedToArray(_ref, 2);
 
-	    var routeToken = _ref2[0];
-	    var locationToken = _ref2[1];
-	    return tokenMatch(routeToken, locationToken, namedParamValidationPattern);
-	  });
-	  console.log(tokenMatches);
-	  return (0, _utils.and)(tokenMatches);
-	}
+	    var key = _ref2[0];
+	    var value = _ref2[1];
 
-	function tokenMatch(routeToken, locationToken, validPathParamPattern) {
-	  if (routeToken.type === 'pathParam') {
-	    return !!locationToken.value.match(validPathParamPattern);
-	  } else {
-	    return locationToken.value === routeToken.value;
-	  }
-	}
-
-	function getParams(routeTokens, locationTokens) {
-	  return routeTokens.reduce(function (params, routeToken, index) {
-	    if (routeToken.type === 'pathParam') {
-	      params[routeToken.value] = locationTokens[index].value;
-	    }
-
+	    params[key] = value;
 	    return params;
 	  }, {});
-	}
-
-	function pathParamName(pathParam) {
-	  return pathParam.substring(1);
 	}
 
 	exports.default = parseRoute;
@@ -217,10 +210,26 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  if (typeof a1Head === 'undefined' && typeof a2Head === 'undefined') {
 	    return acc;
+	  } else {
+	    return zip(a1Tail, a2Tail, acc.concat([[a1Head, a2Head]]));
 	  }
-
-	  return zip(a1Tail, a2Tail, acc.concat([[a1Head, a2Head]]));
 	}
+
+/***/ },
+/* 3 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	var matchOperatorsRe = /[|\\{}()[\]^$+*?.]/g;
+
+	module.exports = function (str) {
+		if (typeof str !== 'string') {
+			throw new TypeError('Expected a string');
+		}
+
+		return str.replace(matchOperatorsRe, '\\$&');
+	};
 
 /***/ }
 /******/ ])
