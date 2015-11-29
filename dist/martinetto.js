@@ -177,16 +177,13 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 2 */
 /***/ function(module, exports) {
 
-	'use strict';
+	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
 	exports.and = and;
 	exports.zip = zip;
-
-	function _toArray(arr) { return Array.isArray(arr) ? arr : Array.from(arr); }
-
 	function and(arr) {
 	  return arr.reduce(function (r, x) {
 	    return r && x;
@@ -194,25 +191,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 	function zip(a1, a2) {
-	  var acc = arguments.length <= 2 || arguments[2] === undefined ? [] : arguments[2];
+	  var times = a1.length >= a2.length ? a1.length : a2.length;
+	  var zipped = [];
 
-	  var _a = _toArray(a1);
-
-	  var a1Head = _a[0];
-
-	  var a1Tail = _a.slice(1);
-
-	  var _a2 = _toArray(a2);
-
-	  var a2Head = _a2[0];
-
-	  var a2Tail = _a2.slice(1);
-
-	  if (typeof a1Head === 'undefined' && typeof a2Head === 'undefined') {
-	    return acc;
-	  } else {
-	    return zip(a1Tail, a2Tail, acc.concat([[a1Head, a2Head]]));
+	  for (var i = 0; i < times; ++i) {
+	    zipped.push([a1[i], a2[i]]);
 	  }
+
+	  return zipped;
 	}
 
 /***/ },
