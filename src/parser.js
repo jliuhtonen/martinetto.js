@@ -65,7 +65,6 @@ function asTokens(path) {
 }
 
 function toPattern(routeTokens) {
-  console.log("routeTokens", routeTokens)
   return routeTokens.map(token => token.pattern).join(pathTokenSeparatorRegExp)
 }
 
