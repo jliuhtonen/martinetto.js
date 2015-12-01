@@ -1,13 +1,5 @@
-export function and(arr) {
-  return arr.reduce((r, x) => r && x, true)
-}
-
 export function flatten(arr) {
   return arr.reduce((flattened, item) => flattened.concat(item), [])
-}
-
-export function flatMap(f, arr) {
-  return flatten(arr.map(f))
 }
 
 export function zip(a1, a2) {

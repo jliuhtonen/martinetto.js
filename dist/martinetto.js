@@ -219,25 +219,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.and = and;
 	exports.flatten = flatten;
-	exports.flatMap = flatMap;
 	exports.zip = zip;
 	exports.intersperse = intersperse;
-	function and(arr) {
-	  return arr.reduce(function (r, x) {
-	    return r && x;
-	  }, true);
-	}
-
 	function flatten(arr) {
 	  return arr.reduce(function (flattened, item) {
 	    return flattened.concat(item);
 	  }, []);
-	}
-
-	function flatMap(f, arr) {
-	  return flatten(arr.map(f));
 	}
 
 	function zip(a1, a2) {
