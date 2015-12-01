@@ -27,12 +27,8 @@ function parseRoute(route, prefix = '') {
       const paramValues = paramMatches.splice(1)
       const paramValuePairs = zip(expectedParamTokens, paramValues)
 
-      const pathParams = toPathParamsObject(paramValuePairs
-        .filter(([param, value]) => param.type === 'pathParam'))
-
-      const wildcards = paramValuePairs
-        .filter(([param, value]) => param.type === 'wildcard')
-        .map(([param, value]) => value)
+      const pathParams = extractPathParams(paramValuePairs)
+      const wildcards = extractWildcardParams(paramValuePairs)
 
       return {
         path: currentPath,
@@ -54,7 +50,7 @@ function asTokens(path) {
     return path
     .split(pathTokenSeparator)
     .filter(notEmpty)
-    .map(stringToToken)
+    .map(stringToPathToken)
   })
 
   const tokenizedWithWildcards = intersperse(tokenizedPaths,
@@ -67,7 +63,7 @@ function toPattern(routeTokens) {
   return routeTokens.map(token => token.pattern).join(pathTokenSeparatorRegExp)
 }
 
-function stringToToken(part) {
+function stringToPathToken(part) {
   if(part.match(namedParamPattern)) {
     return {
       type: 'pathParam',
@@ -83,11 +79,19 @@ function stringToToken(part) {
   }
 }
 
-function toPathParamsObject(paramValues) {
-  return paramValues.reduce((params, [param, value]) => {
-    params[param.value] = value
-    return params
-  }, {})
+function extractWildcardParams(paramValuePairs) {
+  return paramValuePairs
+    .filter(([param, value]) => param.type === 'wildcard')
+    .map(([param, value]) => value)
+}
+
+function extractPathParams(paramValuePairs) {
+  return paramValuePairs
+    .filter(([param, value]) => param.type === 'pathParam')
+    .reduce((params, [param, value]) => {
+      params[param.value] = value
+      return params
+    }, {})
 }
 
 function notEmpty(enumerable) {

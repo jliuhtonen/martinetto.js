@@ -121,27 +121,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var paramValues = paramMatches.splice(1);
 	      var paramValuePairs = (0, _utils.zip)(expectedParamTokens, paramValues);
 
-	      var pathParams = toPathParamsObject(paramValuePairs.filter(function (_ref) {
-	        var _ref2 = _slicedToArray(_ref, 2);
-
-	        var param = _ref2[0];
-	        var value = _ref2[1];
-	        return param.type === 'pathParam';
-	      }));
-
-	      var wildcards = paramValuePairs.filter(function (_ref3) {
-	        var _ref4 = _slicedToArray(_ref3, 2);
-
-	        var param = _ref4[0];
-	        var value = _ref4[1];
-	        return param.type === 'wildcard';
-	      }).map(function (_ref5) {
-	        var _ref6 = _slicedToArray(_ref5, 2);
-
-	        var param = _ref6[0];
-	        var value = _ref6[1];
-	        return value;
-	      });
+	      var pathParams = extractPathParams(paramValuePairs);
+	      var wildcards = extractWildcardParams(paramValuePairs);
 
 	      return {
 	        path: currentPath,
@@ -160,7 +141,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	function asTokens(path) {
 	  var wildcardTokens = path.split('*');
 	  var tokenizedPaths = wildcardTokens.map(function (path) {
-	    return path.split(pathTokenSeparator).filter(notEmpty).map(stringToToken);
+	    return path.split(pathTokenSeparator).filter(notEmpty).map(stringToPathToken);
 	  });
 
 	  var tokenizedWithWildcards = (0, _utils.intersperse)(tokenizedPaths, { type: 'wildcard', value: 'wildcard', pattern: '([\\w\/]*)' });
@@ -174,7 +155,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }).join(pathTokenSeparatorRegExp);
 	}
 
-	function stringToToken(part) {
+	function stringToPathToken(part) {
 	  if (part.match(namedParamPattern)) {
 	    return {
 	      type: 'pathParam',
@@ -190,8 +171,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	}
 
-	function toPathParamsObject(paramValues) {
-	  return paramValues.reduce(function (params, _ref7) {
+	function extractWildcardParams(paramValuePairs) {
+	  return paramValuePairs.filter(function (_ref) {
+	    var _ref2 = _slicedToArray(_ref, 2);
+
+	    var param = _ref2[0];
+	    var value = _ref2[1];
+	    return param.type === 'wildcard';
+	  }).map(function (_ref3) {
+	    var _ref4 = _slicedToArray(_ref3, 2);
+
+	    var param = _ref4[0];
+	    var value = _ref4[1];
+	    return value;
+	  });
+	}
+
+	function extractPathParams(paramValuePairs) {
+	  return paramValuePairs.filter(function (_ref5) {
+	    var _ref6 = _slicedToArray(_ref5, 2);
+
+	    var param = _ref6[0];
+	    var value = _ref6[1];
+	    return param.type === 'pathParam';
+	  }).reduce(function (params, _ref7) {
 	    var _ref8 = _slicedToArray(_ref7, 2);
 
 	    var param = _ref8[0];
