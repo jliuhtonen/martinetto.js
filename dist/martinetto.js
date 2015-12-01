@@ -99,7 +99,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	var pathTokenSeparatorRegExp = (0, _escapeStringRegexp2.default)(pathTokenSeparator);
 
 	var namedParamPattern = /^:\w+$/;
-	var defaultNamedParamValidationPattern = /^\w+$/;
 
 	function parseRoute(route) {
 	  var prefix = arguments.length <= 1 || arguments[1] === undefined ? '' : arguments[1];
@@ -170,7 +169,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 	function toPattern(routeTokens) {
-	  console.log("routeTokens", routeTokens);
 	  return routeTokens.map(function (token) {
 	    return token.pattern;
 	  }).join(pathTokenSeparatorRegExp);

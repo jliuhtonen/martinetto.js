@@ -8,7 +8,6 @@ const pathTokenSeparator = '/'
 const pathTokenSeparatorRegExp = escapeStringRegexp(pathTokenSeparator)
 
 const namedParamPattern = /^:\w+$/
-const defaultNamedParamValidationPattern = /^\w+$/
 
 function parseRoute(route, prefix = '') {
   const routeToParse = pathWithoutPrefix(route, prefix)
