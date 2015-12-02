@@ -9,7 +9,7 @@ const pathTokenSeparatorRegExp = escapeStringRegexp(pathTokenSeparator)
 
 const namedParamPattern = /^:\w+$/
 
-function parseRoute(route, prefix = '') {
+export function parseRoute(route, prefix = '') {
   const routeToParse = pathWithoutPrefix(route, prefix)
   const routeTokens = asTokens(routeToParse)
   const routeRegExp = new RegExp(toPattern(routeTokens))
@@ -97,5 +97,3 @@ function extractPathParams(paramValuePairs) {
 function notEmpty(enumerable) {
   return enumerable.length > 0
 }
-
-export default parseRoute
