@@ -1,15 +1,16 @@
 {
   "name": "martinetto.js",
   "version": "0.1.0",
-  "description": "A modular, functional JS router",
+  "description": "A modular, functional JS route parser",
   "main": "src/index.js",
   "scripts": {
     "compile": "webpack",
     "test": "npm run compile && mocha test/index.js"
   },
   "keywords": [
-    "router",
-    "modular"
+    "route",
+    "parser",
+    "micro-library"
   ],
   "author": "Janne Liuhtonen",
   "license": "MIT",
