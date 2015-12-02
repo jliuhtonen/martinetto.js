@@ -2,7 +2,6 @@ import {zip, and, flatten, intersperse} from './utils'
 import escapeStringRegexp from 'escape-string-regexp'
 
 const wildcardTokenSeparator = '*'
-const wildcardTokenSeparatorRegExp = escapeStringRegexp(wildcardTokenSeparator)
 
 const pathTokenSeparator = '/'
 const pathTokenSeparatorRegExp = escapeStringRegexp(pathTokenSeparator)
@@ -45,7 +44,7 @@ function pathWithoutPrefix(path, prefix) {
 }
 
 function asTokens(path) {
-  const wildcardTokens = path.split('*')
+  const wildcardTokens = path.split(wildcardTokenSeparator)
   const tokenizedPaths = wildcardTokens.map(path => {
     return path
     .split(pathTokenSeparator)
@@ -81,13 +80,13 @@ function stringToPathToken(part) {
 
 function extractWildcardParams(paramValuePairs) {
   return paramValuePairs
-    .filter(([param, value]) => param.type === 'wildcard')
-    .map(([param, value]) => value)
+    .filter(([param]) => param.type === 'wildcard')
+    .map(([ , value]) => value)
 }
 
 function extractPathParams(paramValuePairs) {
   return paramValuePairs
-    .filter(([param, value]) => param.type === 'pathParam')
+    .filter(([param]) => param.type === 'pathParam')
     .reduce((params, [param, value]) => {
       params[param.value] = value
       return params
