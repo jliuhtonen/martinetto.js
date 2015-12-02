@@ -2,7 +2,7 @@ module.exports = {
   context: __dirname,
   entry: './src/main',
   output: {
-    path: __dirname +'/dist/',
+    path: __dirname + '/dist/',
     filename: 'martinetto.js',
     library: 'martinetto',
     libraryTarget: 'umd'
@@ -11,7 +11,7 @@ module.exports = {
     loaders: [
       {
         test: /\.js$/,
-        exclude: /^node_modules.*/,
+        exclude: /^\.\/node_modules.*/,
         loader: 'babel?presets[]=es2015'
       }
     ]
