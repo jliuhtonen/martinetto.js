@@ -67,7 +67,7 @@ function stringToPathToken(part) {
     return {
       type: 'pathParam',
       value: part.substring(1),
-      pattern: '(\\w+)'
+      pattern: '([\\w-%]+)'
     }
   } else {
     return {
