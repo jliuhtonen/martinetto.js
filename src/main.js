@@ -81,14 +81,14 @@ function stringToPathToken(part) {
 function extractWildcardParams(paramValuePairs) {
   return paramValuePairs
     .filter(([param]) => param.type === 'wildcard')
-    .map(([ , value]) => value)
+    .map(([ , value]) => decodeURIComponent(value))
 }
 
 function extractPathParams(paramValuePairs) {
   return paramValuePairs
     .filter(([param]) => param.type === 'pathParam')
     .reduce((params, [param, value]) => {
-      params[param.value] = value
+      params[param.value] = decodeURIComponent(value)
       return params
     }, {})
 }
