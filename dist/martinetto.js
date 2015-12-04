@@ -138,7 +138,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return {
 	      type: 'pathParam',
 	      value: part.substring(1),
-	      pattern: '(\\w+)'
+	      pattern: '([\\w-%]+)'
 	    };
 	  } else {
 	    return {
@@ -159,7 +159,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var _ref4 = _slicedToArray(_ref3, 2);
 
 	    var value = _ref4[1];
-	    return value;
+	    return decodeURIComponent(value);
 	  });
 	}
 
@@ -175,7 +175,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var param = _ref8[0];
 	    var value = _ref8[1];
 
-	    params[param.value] = value;
+	    params[param.value] = decodeURIComponent(value);
 	    return params;
 	  }, {});
 	}
