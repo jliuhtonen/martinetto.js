@@ -4,6 +4,7 @@ import escapeStringRegexp from 'escape-string-regexp'
 const namedParamPattern = /^:\w+$/
 
 const wildcardTokenSeparator = '*'
+const wildcardToken = { type: 'wildcard', value: 'wildcard', pattern: '([\\w\/]*)' }
 
 const pathTokenSeparator = '/'
 const pathTokenSeparatorRegExp = escapeStringRegexp(pathTokenSeparator)
@@ -17,8 +18,7 @@ export function asTokens(path) {
     .map(stringToPathToken)
   })
 
-  const tokenizedWithWildcards = intersperse(tokenizedPaths,
-    { type: 'wildcard', value: 'wildcard', pattern: '([\\w\/]*)' })
+  const tokenizedWithWildcards = intersperse(tokenizedPaths, wildcardToken)
 
   return flatten(tokenizedWithWildcards)
 }

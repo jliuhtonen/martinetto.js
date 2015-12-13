@@ -170,6 +170,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var namedParamPattern = /^:\w+$/;
 
 	var wildcardTokenSeparator = '*';
+	var wildcardToken = { type: 'wildcard', value: 'wildcard', pattern: '([\\w\/]*)' };
 
 	var pathTokenSeparator = '/';
 	var pathTokenSeparatorRegExp = (0, _escapeStringRegexp2.default)(pathTokenSeparator);
@@ -180,7 +181,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return path.split(pathTokenSeparator).filter(_utils.notEmpty).map(stringToPathToken);
 	  });
 
-	  var tokenizedWithWildcards = (0, _utils.intersperse)(tokenizedPaths, { type: 'wildcard', value: 'wildcard', pattern: '([\\w\/]*)' });
+	  var tokenizedWithWildcards = (0, _utils.intersperse)(tokenizedPaths, wildcardToken);
 
 	  return (0, _utils.flatten)(tokenizedWithWildcards);
 	}
