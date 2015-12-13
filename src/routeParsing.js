@@ -20,7 +20,7 @@ export function asTokens(path) {
   const tokenizedWithWildcards = intersperse(tokenizedPaths,
     { type: 'wildcard', value: 'wildcard', pattern: '([\\w\/]*)' })
 
-    return flatten(tokenizedWithWildcards)
+  return flatten(tokenizedWithWildcards)
 }
 
 export function toPattern(routeTokens) {
