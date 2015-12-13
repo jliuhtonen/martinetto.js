@@ -1,7 +1,7 @@
 {
   "name": "martinetto.js",
   "version": "0.1.0",
-  "description": "A modular, functional JS route parser",
+  "description": "A modular, functional JS route parser micro library",
   "main": "src/index.js",
   "scripts": {
     "compile": "webpack",
