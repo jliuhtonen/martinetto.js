@@ -1,12 +1,6 @@
-import {zip, and, flatten, intersperse} from './utils'
-import escapeStringRegexp from 'escape-string-regexp'
-
-const wildcardTokenSeparator = '*'
-
-const pathTokenSeparator = '/'
-const pathTokenSeparatorRegExp = escapeStringRegexp(pathTokenSeparator)
-
-const namedParamPattern = /^:\w+$/
+import {zip, and, flatten, intersperse, pathWithoutPrefix} from './utils'
+import {asTokens, toPattern} from './routeParsing'
+import {extractWildcardParams, extractPathParams} from './parameterExtract'
 
 export function parseRoute(route, prefix = '') {
   const routeToParse = pathWithoutPrefix(route, prefix)
@@ -36,63 +30,4 @@ export function parseRoute(route, prefix = '') {
       }
     }
   }
-}
-
-function pathWithoutPrefix(path, prefix) {
-  const pathHasPrefix = path.startsWith(prefix)
-  return pathHasPrefix ? path.substring(prefix.length) : path
-}
-
-function asTokens(path) {
-  const wildcardTokens = path.split(wildcardTokenSeparator)
-  const tokenizedPaths = wildcardTokens.map(path => {
-    return path
-    .split(pathTokenSeparator)
-    .filter(notEmpty)
-    .map(stringToPathToken)
-  })
-
-  const tokenizedWithWildcards = intersperse(tokenizedPaths,
-    { type: 'wildcard', value: 'wildcard', pattern: '([\\w\/]*)' })
-
-  return flatten(tokenizedWithWildcards)
-}
-
-function toPattern(routeTokens) {
-  return routeTokens.map(token => token.pattern).join(pathTokenSeparatorRegExp)
-}
-
-function stringToPathToken(part) {
-  if(part.match(namedParamPattern)) {
-    return {
-      type: 'pathParam',
-      value: part.substring(1),
-      pattern: '([\\w-%]+)'
-    }
-  } else {
-    return {
-      type: 'literal',
-      value: part,
-      pattern: escapeStringRegexp(part)
-    }
-  }
-}
-
-function extractWildcardParams(paramValuePairs) {
-  return paramValuePairs
-    .filter(([param]) => param.type === 'wildcard')
-    .map(([ , value]) => decodeURIComponent(value))
-}
-
-function extractPathParams(paramValuePairs) {
-  return paramValuePairs
-    .filter(([param]) => param.type === 'pathParam')
-    .reduce((params, [param, value]) => {
-      params[param.value] = decodeURIComponent(value)
-      return params
-    }, {})
-}
-
-function notEmpty(enumerable) {
-  return enumerable.length > 0
 }

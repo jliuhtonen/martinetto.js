@@ -19,3 +19,12 @@ export function intersperse(arr, elem) {
     return interspersed.concat(newItems)
   }, [])
 }
+
+export function notEmpty(enumerable) {
+  return enumerable.length > 0
+}
+
+export function pathWithoutPrefix(path, prefix) {
+  const pathHasPrefix = path.startsWith(prefix)
+  return pathHasPrefix ? path.substring(prefix.length) : path
+}

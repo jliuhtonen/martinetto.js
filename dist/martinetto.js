@@ -56,8 +56,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; })();
-
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
@@ -65,31 +63,22 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _utils = __webpack_require__(1);
 
-	var _escapeStringRegexp = __webpack_require__(2);
+	var _routeParsing = __webpack_require__(2);
 
-	var _escapeStringRegexp2 = _interopRequireDefault(_escapeStringRegexp);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var wildcardTokenSeparator = '*';
-
-	var pathTokenSeparator = '/';
-	var pathTokenSeparatorRegExp = (0, _escapeStringRegexp2.default)(pathTokenSeparator);
-
-	var namedParamPattern = /^:\w+$/;
+	var _parameterExtract = __webpack_require__(4);
 
 	function parseRoute(route) {
 	  var prefix = arguments.length <= 1 || arguments[1] === undefined ? '' : arguments[1];
 
-	  var routeToParse = pathWithoutPrefix(route, prefix);
-	  var routeTokens = asTokens(routeToParse);
-	  var routeRegExp = new RegExp(toPattern(routeTokens));
+	  var routeToParse = (0, _utils.pathWithoutPrefix)(route, prefix);
+	  var routeTokens = (0, _routeParsing.asTokens)(routeToParse);
+	  var routeRegExp = new RegExp((0, _routeParsing.toPattern)(routeTokens));
 	  var expectedParamTokens = routeTokens.filter(function (token) {
 	    return token.type !== 'literal';
 	  });
 
 	  return function (currentPath) {
-	    var pathToMatch = pathWithoutPrefix(currentPath, prefix);
+	    var pathToMatch = (0, _utils.pathWithoutPrefix)(currentPath, prefix);
 	    var paramMatches = pathToMatch.match(routeRegExp);
 	    var isMatch = !!paramMatches;
 
@@ -99,8 +88,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var paramValues = paramMatches.splice(1);
 	      var paramValuePairs = (0, _utils.zip)(expectedParamTokens, paramValues);
 
-	      var pathParams = extractPathParams(paramValuePairs);
-	      var wildcards = extractWildcardParams(paramValuePairs);
+	      var pathParams = (0, _parameterExtract.extractPathParams)(paramValuePairs);
+	      var wildcards = (0, _parameterExtract.extractWildcardParams)(paramValuePairs);
 
 	      return {
 	        path: currentPath,
@@ -111,15 +100,84 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	}
 
+/***/ },
+/* 1 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.flatten = flatten;
+	exports.zip = zip;
+	exports.intersperse = intersperse;
+	exports.notEmpty = notEmpty;
+	exports.pathWithoutPrefix = pathWithoutPrefix;
+	function flatten(arr) {
+	  return arr.reduce(function (flattened, item) {
+	    return flattened.concat(item);
+	  }, []);
+	}
+
+	function zip(a1, a2) {
+	  var times = a1.length >= a2.length ? a1.length : a2.length;
+	  var zipped = [];
+
+	  for (var i = 0; i < times; ++i) {
+	    zipped.push([a1[i], a2[i]]);
+	  }
+
+	  return zipped;
+	}
+
+	function intersperse(arr, elem) {
+	  return arr.reduce(function (interspersed, item, index) {
+	    var newItems = index === arr.length - 1 ? [item] : [item, elem];
+	    return interspersed.concat(newItems);
+	  }, []);
+	}
+
+	function notEmpty(enumerable) {
+	  return enumerable.length > 0;
+	}
+
 	function pathWithoutPrefix(path, prefix) {
 	  var pathHasPrefix = path.startsWith(prefix);
 	  return pathHasPrefix ? path.substring(prefix.length) : path;
 	}
 
+/***/ },
+/* 2 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.asTokens = asTokens;
+	exports.toPattern = toPattern;
+
+	var _utils = __webpack_require__(1);
+
+	var _escapeStringRegexp = __webpack_require__(3);
+
+	var _escapeStringRegexp2 = _interopRequireDefault(_escapeStringRegexp);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var namedParamPattern = /^:\w+$/;
+
+	var wildcardTokenSeparator = '*';
+
+	var pathTokenSeparator = '/';
+	var pathTokenSeparatorRegExp = (0, _escapeStringRegexp2.default)(pathTokenSeparator);
+
 	function asTokens(path) {
 	  var wildcardTokens = path.split(wildcardTokenSeparator);
 	  var tokenizedPaths = wildcardTokens.map(function (path) {
-	    return path.split(pathTokenSeparator).filter(notEmpty).map(stringToPathToken);
+	    return path.split(pathTokenSeparator).filter(_utils.notEmpty).map(stringToPathToken);
 	  });
 
 	  var tokenizedWithWildcards = (0, _utils.intersperse)(tokenizedPaths, { type: 'wildcard', value: 'wildcard', pattern: '([\\w\/]*)' });
@@ -149,6 +207,35 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	}
 
+/***/ },
+/* 3 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	var matchOperatorsRe = /[|\\{}()[\]^$+*?.]/g;
+
+	module.exports = function (str) {
+		if (typeof str !== 'string') {
+			throw new TypeError('Expected a string');
+		}
+
+		return str.replace(matchOperatorsRe, '\\$&');
+	};
+
+/***/ },
+/* 4 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; })();
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.extractWildcardParams = extractWildcardParams;
+	exports.extractPathParams = extractPathParams;
 	function extractWildcardParams(paramValuePairs) {
 	  return paramValuePairs.filter(function (_ref) {
 	    var _ref2 = _slicedToArray(_ref, 1);
@@ -179,62 +266,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return params;
 	  }, {});
 	}
-
-	function notEmpty(enumerable) {
-	  return enumerable.length > 0;
-	}
-
-/***/ },
-/* 1 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.flatten = flatten;
-	exports.zip = zip;
-	exports.intersperse = intersperse;
-	function flatten(arr) {
-	  return arr.reduce(function (flattened, item) {
-	    return flattened.concat(item);
-	  }, []);
-	}
-
-	function zip(a1, a2) {
-	  var times = a1.length >= a2.length ? a1.length : a2.length;
-	  var zipped = [];
-
-	  for (var i = 0; i < times; ++i) {
-	    zipped.push([a1[i], a2[i]]);
-	  }
-
-	  return zipped;
-	}
-
-	function intersperse(arr, elem) {
-	  return arr.reduce(function (interspersed, item, index) {
-	    var newItems = index === arr.length - 1 ? [item] : [item, elem];
-	    return interspersed.concat(newItems);
-	  }, []);
-	}
-
-/***/ },
-/* 2 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	var matchOperatorsRe = /[|\\{}()[\]^$+*?.]/g;
-
-	module.exports = function (str) {
-		if (typeof str !== 'string') {
-			throw new TypeError('Expected a string');
-		}
-
-		return str.replace(matchOperatorsRe, '\\$&');
-	};
 
 /***/ }
 /******/ ])
