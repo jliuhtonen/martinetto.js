@@ -4,7 +4,7 @@ import escapeStringRegexp from 'escape-string-regexp'
 const namedParamPattern = /^:\w+$/
 
 const wildcardTokenSeparator = '*'
-const wildcardToken = { type: 'wildcard', value: 'wildcard', pattern: '([\\w\/]*)' }
+const wildcardToken = { type: 'wildcard', value: 'wildcard', pattern: '([\\w-%\/]*)' }
 
 const pathTokenSeparator = '/'
 const pathTokenSeparatorRegExp = escapeStringRegexp(pathTokenSeparator)

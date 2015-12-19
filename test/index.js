@@ -74,5 +74,14 @@ describe('Route with wildcards', () => {
     expect(result.wildcards[1]).to.equal('Barcelona/Monday')
   })
 
+  it('should support url encoded wildcard params', () => {
+    const route = parseRoute('/rest/*')
+    const path = '/rest/artist/Sigur%20R%C3%B3s'
+    const result = route(path)
+    expect(result).to.exist
+    expect(result.wildcards.length).to.equal(1)
+    expect(result.wildcards[0]).to.equal('artist/Sigur Rós')
+  })
+
 
 })

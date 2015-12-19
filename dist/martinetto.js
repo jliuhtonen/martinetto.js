@@ -170,7 +170,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var namedParamPattern = /^:\w+$/;
 
 	var wildcardTokenSeparator = '*';
-	var wildcardToken = { type: 'wildcard', value: 'wildcard', pattern: '([\\w\/]*)' };
+	var wildcardToken = { type: 'wildcard', value: 'wildcard', pattern: '([\\w-%\/]*)' };
 
 	var pathTokenSeparator = '/';
 	var pathTokenSeparatorRegExp = (0, _escapeStringRegexp2.default)(pathTokenSeparator);

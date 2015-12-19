@@ -1,9 +1,9 @@
 {
   "name": "martinetto.js",
-  "version": "0.1.0",
-  "repository": { 
-    "type" : "git", 
-    "url" : "https://github.com/jliuhtonen/martinetto.js.git"
+  "version": "0.1.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jliuhtonen/martinetto.js.git"
   },
   "description": "A modular, functional JS route parser micro library",
   "main": "src/index.js",
