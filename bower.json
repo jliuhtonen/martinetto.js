@@ -1,0 +1,28 @@
+{
+  "name": "martinetto.js",
+  "description": "A modular, functional JS route parser micro library",
+  "main": "dist/martinetto.js",
+  "authors": [
+    "Janne Liuhtonen"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "route",
+    "parser",
+    "micro-library"
+  ],
+  "homepage": "https://github.com/jliuhtonen/martinetto.js",
+  "moduleType": [
+    "amd",
+    "es6",
+    "globals",
+    "node"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
