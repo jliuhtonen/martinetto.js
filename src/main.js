@@ -1,6 +1,17 @@
 import {zip, and, flatten, intersperse, pathWithoutPrefix} from './utils'
 import {asTokens, toPattern} from './routeParsing'
 import {extractWildcardParams, extractPathParams} from './parameterExtract'
+import parseQueryParams from './queryParams'
+
+const fragmentSeparator = '#'
+const querySeparator = '?'
+
+function parseRelativePathParts(relativePath) {
+  const [pathWithoutFragment, fragment = ''] = relativePath.split(fragmentSeparator)
+  const [path, query = ''] = pathWithoutFragment.split(querySeparator)
+
+  return { path, query, fragment }
+}
 
 export function parseRoute(route, prefix = '') {
   const routeToParse = pathWithoutPrefix(route, prefix)
@@ -9,7 +20,10 @@ export function parseRoute(route, prefix = '') {
   const expectedParamTokens = routeTokens
     .filter(token => token.type !== 'literal')
 
-  return function(currentPath) {
+  return function(uriPath) {
+    const pathParts = parseRelativePathParts(uriPath)
+    const currentPath = pathParts.path
+
     const pathToMatch = pathWithoutPrefix(currentPath, prefix)
     const paramMatches = pathToMatch.match(routeRegExp)
     const isMatch = !!paramMatches
@@ -22,9 +36,12 @@ export function parseRoute(route, prefix = '') {
 
       const pathParams = extractPathParams(paramValuePairs)
       const wildcards = extractWildcardParams(paramValuePairs)
+      const queryParams = parseQueryParams(pathParts.query)
 
       return {
         path: currentPath,
+        fragment: pathParts.fragment,
+        queryParams,
         pathParams,
         wildcards
       }

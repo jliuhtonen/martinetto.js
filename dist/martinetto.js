@@ -56,6 +56,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
+	var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; })();
+
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
@@ -67,6 +69,35 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _parameterExtract = __webpack_require__(4);
 
+	var _queryParams = __webpack_require__(5);
+
+	var _queryParams2 = _interopRequireDefault(_queryParams);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var fragmentSeparator = '#';
+	var querySeparator = '?';
+
+	function parseRelativePathParts(relativePath) {
+	  var _relativePath$split = relativePath.split(fragmentSeparator);
+
+	  var _relativePath$split2 = _slicedToArray(_relativePath$split, 2);
+
+	  var pathWithoutFragment = _relativePath$split2[0];
+	  var _relativePath$split2$ = _relativePath$split2[1];
+	  var fragment = _relativePath$split2$ === undefined ? '' : _relativePath$split2$;
+
+	  var _pathWithoutFragment$ = pathWithoutFragment.split(querySeparator);
+
+	  var _pathWithoutFragment$2 = _slicedToArray(_pathWithoutFragment$, 2);
+
+	  var path = _pathWithoutFragment$2[0];
+	  var _pathWithoutFragment$3 = _pathWithoutFragment$2[1];
+	  var query = _pathWithoutFragment$3 === undefined ? '' : _pathWithoutFragment$3;
+
+	  return { path: path, query: query, fragment: fragment };
+	}
+
 	function parseRoute(route) {
 	  var prefix = arguments.length <= 1 || arguments[1] === undefined ? '' : arguments[1];
 
@@ -77,7 +108,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return token.type !== 'literal';
 	  });
 
-	  return function (currentPath) {
+	  return function (uriPath) {
+	    var pathParts = parseRelativePathParts(uriPath);
+	    var currentPath = pathParts.path;
+
 	    var pathToMatch = (0, _utils.pathWithoutPrefix)(currentPath, prefix);
 	    var paramMatches = pathToMatch.match(routeRegExp);
 	    var isMatch = !!paramMatches;
@@ -90,9 +124,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      var pathParams = (0, _parameterExtract.extractPathParams)(paramValuePairs);
 	      var wildcards = (0, _parameterExtract.extractWildcardParams)(paramValuePairs);
+	      var queryParams = (0, _queryParams2.default)(pathParts.query);
 
 	      return {
 	        path: currentPath,
+	        fragment: pathParts.fragment,
+	        queryParams: queryParams,
 	        pathParams: pathParams,
 	        wildcards: wildcards
 	      };
@@ -264,6 +301,39 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var value = _ref8[1];
 
 	    params[param.value] = decodeURIComponent(value);
+	    return params;
+	  }, {});
+	}
+
+/***/ },
+/* 5 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; })();
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = parseQueryParams;
+
+	var _utils = __webpack_require__(1);
+
+	var queryParamSeparator = '&';
+	var keyValueSeparator = '=';
+
+	function parseQueryParams(query) {
+	  return query.split(queryParamSeparator).filter(_utils.notEmpty).map(function (kv) {
+	    return kv.split(keyValueSeparator);
+	  }).reduce(function (params, _ref) {
+	    var _ref2 = _slicedToArray(_ref, 2);
+
+	    var key = _ref2[0];
+	    var value = _ref2[1];
+
+	    var cleanedVal = value ? decodeURIComponent(value) : null;
+	    params[key] = cleanedVal;
 	    return params;
 	  }, {});
 	}
