@@ -33,7 +33,6 @@ describe('Route with named parameters', () => {
     expect(result.path).to.equal(pathWithSlash)
     expect(result.pathParams.username).to.equal('joe')
     expect(result.pathParams.title).to.equal('rock-anthems')
-    console.log(result)
   })
 
   it('should URI decode parameters', () => {
