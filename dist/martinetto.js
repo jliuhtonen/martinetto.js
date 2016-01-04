@@ -217,8 +217,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var namedParamPattern = /^:\w+$/;
 
+	var allowedPathChars = "A-Za-z0-9_\\.~:@\\-%!\\$&'\\(\\)\\*\\+,;=";
+
 	var wildcardTokenSeparator = '*';
-	var wildcardToken = { type: 'wildcard', value: 'wildcard', pattern: '([\\w-%\/]*)' };
+	var wildcardToken = { type: 'wildcard', value: 'wildcard', pattern: '([' + allowedPathChars + '/]*)' };
 
 	var pathTokenSeparator = '/';
 	var pathTokenSeparatorRegExp = (0, _escapeStringRegexp2.default)(pathTokenSeparator);
@@ -245,7 +247,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return {
 	      type: 'pathParam',
 	      value: part.substring(1),
-	      pattern: '([\\w-%]+)'
+	      pattern: '([' + allowedPathChars + ']+)'
 	    };
 	  } else {
 	    return {

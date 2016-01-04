@@ -3,8 +3,10 @@ import escapeStringRegexp from 'escape-string-regexp'
 
 const namedParamPattern = /^:\w+$/
 
+const allowedPathChars = "A-Za-z0-9_\\.~:@\\-%!\\$&'\\(\\)\\*\\+,;="
+
 const wildcardTokenSeparator = '*'
-const wildcardToken = { type: 'wildcard', value: 'wildcard', pattern: '([\\w-%\/]*)' }
+const wildcardToken = { type: 'wildcard', value: 'wildcard', pattern: `([${allowedPathChars}\/]*)` }
 
 const pathTokenSeparator = '/'
 const pathTokenSeparatorRegExp = escapeStringRegexp(pathTokenSeparator)
@@ -32,7 +34,7 @@ function stringToPathToken(part) {
     return {
       type: 'pathParam',
       value: part.substring(1),
-      pattern: '([\\w-%]+)'
+      pattern: `([${allowedPathChars}]+)`
     }
   } else {
     return {
