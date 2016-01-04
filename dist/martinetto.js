@@ -151,6 +151,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.intersperse = intersperse;
 	exports.notEmpty = notEmpty;
 	exports.pathWithoutPrefix = pathWithoutPrefix;
+	exports.splitAtFirst = splitAtFirst;
 	function flatten(arr) {
 	  return arr.reduce(function (flattened, item) {
 	    return flattened.concat(item);
@@ -182,6 +183,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	function pathWithoutPrefix(path, prefix) {
 	  var pathHasPrefix = path.startsWith(prefix);
 	  return pathHasPrefix ? path.substring(prefix.length) : path;
+	}
+
+	function splitAtFirst(strToSplit, splitter) {
+	  var splitStrIdx = strToSplit.indexOf(splitter);
+
+	  if (splitStrIdx === -1) {
+	    return [strToSplit];
+	  } else {
+	    return [strToSplit.substring(0, splitStrIdx), strToSplit.substring(splitStrIdx + 1)];
+	  }
 	}
 
 /***/ },
@@ -324,7 +335,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var keyValueSeparator = '=';
 
 	function parseQueryParams(query) {
-	  return query.split(queryParamSeparator).filter(_utils.notEmpty).map(function (kv) {
+	  return (0, _utils.splitAtFirst)(query, queryParamSeparator).filter(_utils.notEmpty).map(function (kv) {
 	    return kv.split(keyValueSeparator);
 	  }).reduce(function (params, _ref) {
 	    var _ref2 = _slicedToArray(_ref, 2);

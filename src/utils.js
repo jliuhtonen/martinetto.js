@@ -28,3 +28,14 @@ export function pathWithoutPrefix(path, prefix) {
   const pathHasPrefix = path.startsWith(prefix)
   return pathHasPrefix ? path.substring(prefix.length) : path
 }
+
+export function splitAtFirst(strToSplit, splitter) {
+  const splitStrIdx = strToSplit.indexOf(splitter)
+
+  if (splitStrIdx === -1) {
+    return [strToSplit]
+  } else {
+    return [strToSplit.substring(0, splitStrIdx), strToSplit.substring(splitStrIdx + 1)]
+  }
+
+}
