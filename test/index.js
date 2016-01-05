@@ -2,7 +2,7 @@ const mocha = require('mocha')
 const chai = require('chai')
 const expect = chai.expect
 
-const Martinetto = require('../dist/martinetto')
+const Martinetto = require('../src/main')
 const parseRoute = Martinetto.parseRoute
 
 describe('Route with named parameters', () => {
