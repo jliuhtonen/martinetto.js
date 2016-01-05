@@ -78,26 +78,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	var fragmentSeparator = '#';
 	var querySeparator = '?';
 
-	function parseRelativePathParts(relativePath) {
-	  var _relativePath$split = relativePath.split(fragmentSeparator);
-
-	  var _relativePath$split2 = _slicedToArray(_relativePath$split, 2);
-
-	  var pathWithoutFragment = _relativePath$split2[0];
-	  var _relativePath$split2$ = _relativePath$split2[1];
-	  var fragment = _relativePath$split2$ === undefined ? '' : _relativePath$split2$;
-
-	  var _pathWithoutFragment$ = pathWithoutFragment.split(querySeparator);
-
-	  var _pathWithoutFragment$2 = _slicedToArray(_pathWithoutFragment$, 2);
-
-	  var path = _pathWithoutFragment$2[0];
-	  var _pathWithoutFragment$3 = _pathWithoutFragment$2[1];
-	  var query = _pathWithoutFragment$3 === undefined ? '' : _pathWithoutFragment$3;
-
-	  return { path: path, query: query, fragment: fragment };
-	}
-
 	function parseRoute(route) {
 	  var prefix = arguments.length <= 1 || arguments[1] === undefined ? '' : arguments[1];
 
@@ -135,6 +115,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	      };
 	    }
 	  };
+	}
+
+	function parseRelativePathParts(relativePath) {
+	  var _relativePath$split = relativePath.split(fragmentSeparator);
+
+	  var _relativePath$split2 = _slicedToArray(_relativePath$split, 2);
+
+	  var pathWithoutFragment = _relativePath$split2[0];
+	  var _relativePath$split2$ = _relativePath$split2[1];
+	  var fragment = _relativePath$split2$ === undefined ? '' : _relativePath$split2$;
+
+	  var _pathWithoutFragment$ = pathWithoutFragment.split(querySeparator);
+
+	  var _pathWithoutFragment$2 = _slicedToArray(_pathWithoutFragment$, 2);
+
+	  var path = _pathWithoutFragment$2[0];
+	  var _pathWithoutFragment$3 = _pathWithoutFragment$2[1];
+	  var query = _pathWithoutFragment$3 === undefined ? '' : _pathWithoutFragment$3;
+
+	  return { path: path, query: query, fragment: fragment };
 	}
 
 /***/ },

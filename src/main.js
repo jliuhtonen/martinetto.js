@@ -6,13 +6,6 @@ import parseQueryParams from './queryParams'
 const fragmentSeparator = '#'
 const querySeparator = '?'
 
-function parseRelativePathParts(relativePath) {
-  const [pathWithoutFragment, fragment = ''] = relativePath.split(fragmentSeparator)
-  const [path, query = ''] = pathWithoutFragment.split(querySeparator)
-
-  return { path, query, fragment }
-}
-
 export function parseRoute(route, prefix = '') {
   const routeToParse = pathWithoutPrefix(route, prefix)
   const routeTokens = asTokens(routeToParse)
@@ -47,4 +40,11 @@ export function parseRoute(route, prefix = '') {
       }
     }
   }
+}
+
+function parseRelativePathParts(relativePath) {
+  const [pathWithoutFragment, fragment = ''] = relativePath.split(fragmentSeparator)
+  const [path, query = ''] = pathWithoutFragment.split(querySeparator)
+
+  return { path, query, fragment }
 }
