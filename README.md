@@ -7,9 +7,34 @@ Martinetto.js is a micro-library for parsing and matching relative url paths or 
 
 ```javascript
 > const Martinetto = require('./dist/martinetto')
-> const routeMatcher = Martinetto.parseRoute('/users/:username/lists/:year/*')
-> routeMatcher('/users/janne/lists/2015/electronic/house')
-{ path: '/users/janne/lists/2015/electronic/house',
-  pathParams: { username: 'janne', year: '2015' },
-  wildcards: [ 'electronic/house' ] }
+> const routeMatcher = Martinetto.routing([
+  { 
+    route: '/artists/:name/album/:albumName', 
+    fn: (routeData) => {
+      console.log(routeData)
+      return 'Album page'
+    } 
+  },
+  { 
+    route: '/artists/:name/*', 
+    fn: (routeData) =>  {
+      console.log(routeData)
+      return 'Artist page'
+    } 
+  }
+])
+> routeMatcher('/artists/Aphex%20Twin/album/Syro')
+{ path: '/artists/Aphex%20Twin/album/Syro',
+  fragment: '',
+  queryParams: {},
+  pathParams: { name: 'Aphex Twin', albumName: 'Syro' },
+  wildcards: [] }
+'Album page'
+> routeMatcher('/artists/Aphex%20Twin/gigs')
+{ path: '/artists/Aphex%20Twin/gigs',
+  fragment: '',
+  queryParams: {},
+  pathParams: { name: 'Aphex Twin' },
+  wildcards: [ 'gigs' ] }
+'Artist page'
 ```
