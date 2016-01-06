@@ -39,3 +39,16 @@ export function splitAtFirst(strToSplit, splitter) {
   }
 
 }
+
+export function findFirstTruthy(items, fn) {
+  for(let i = 0; i < items.length; ++i) {
+    const item = items[i]
+    const fnVal = fn(item)
+
+    if(fnVal) {
+      return fnVal
+    }
+  }
+
+  return null
+}
