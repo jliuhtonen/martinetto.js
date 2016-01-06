@@ -2,8 +2,10 @@ const mocha = require('mocha')
 const chai = require('chai')
 const expect = chai.expect
 
-const Martinetto = require('../src/main')
+const Martinetto = require('../src/routeParser')
 const parseRoute = Martinetto.parseRoute
+
+context('Route parser', () => {
 
 describe('Route with named parameters', () => {
   const route = parseRoute('/users/:username/lists/:title')
@@ -86,5 +88,7 @@ describe('Route with wildcards', () => {
     expect(result.wildcards[0]).to.equal('artist/Sigur Rós')
   })
 
+
+})
 
 })
