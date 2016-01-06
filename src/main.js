@@ -1,50 +1,32 @@
-import {zip, and, flatten, intersperse, pathWithoutPrefix} from './utils'
-import {asTokens, toPattern} from './routeParsing'
-import {extractWildcardParams, extractPathParams} from './parameterExtract'
-import parseQueryParams from './queryParams'
+import {parseRoute} from './routeParser'
+import {findFirstTruthy} from './utils'
 
-const fragmentSeparator = '#'
-const querySeparator = '?'
+export function routing(routeDefs) {
 
-export function parseRoute(route, prefix = '') {
-  const routeToParse = pathWithoutPrefix(route, prefix)
-  const routeTokens = asTokens(routeToParse)
-  const routeRegExp = new RegExp(toPattern(routeTokens))
-  const expectedParamTokens = routeTokens
-    .filter(token => token.type !== 'literal')
+  const routeMatchers = routes.map(routeDef => ({
+    match: parseRoute(routeDef.route),
+    fn: routeDef.fn
+  }))
 
-  return function(uriPath) {
-    const pathParts = parseRelativePathParts(uriPath)
-    const currentPath = pathParts.path
+  return function(currentPath) {
+    const matchingResult = firstMatchingRoute(routeMatchers, currentPath)
 
-    const pathToMatch = pathWithoutPrefix(currentPath, prefix)
-    const paramMatches = pathToMatch.match(routeRegExp)
-    const isMatch = !!paramMatches
-
-    if(!isMatch) {
-      return null
+    if(matchingResult) {
+      return matchingResult.matcher.fn(matchingResult.result)
     } else {
-      const paramValues = paramMatches.splice(1)
-      const paramValuePairs = zip(expectedParamTokens, paramValues)
-
-      const pathParams = extractPathParams(paramValuePairs)
-      const wildcards = extractWildcardParams(paramValuePairs)
-      const queryParams = parseQueryParams(pathParts.query)
-
-      return {
-        path: currentPath,
-        fragment: pathParts.fragment,
-        queryParams,
-        pathParams,
-        wildcards
-      }
+      return null
     }
   }
 }
 
-function parseRelativePathParts(relativePath) {
-  const [pathWithoutFragment, fragment = ''] = relativePath.split(fragmentSeparator)
-  const [path, query = ''] = pathWithoutFragment.split(querySeparator)
+function firstMatchingRoute(matchers, currentPath) {
+  return findFirstTruthy(matchers, matcher => {
+    const result = matcher.match(currentPath)
 
-  return { path, query, fragment }
+    if(result) {
+      return {matcher, result}
+    } else {
+      return null
+    }
+  })
 }
