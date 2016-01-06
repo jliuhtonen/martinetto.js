@@ -2,8 +2,11 @@ const mocha = require('mocha')
 const chai = require('chai')
 const expect = chai.expect
 
-const Martinetto = require('../src/routeParser')
-const parseRoute = Martinetto.parseRoute
+const MartinettoParser = require('../src/routeParser')
+const parseRoute = MartinettoParser.parseRoute
+
+const MartinettoRouter = require('../src/main')
+const routing = MartinettoRouter.routing
 
 context('Route parser', () => {
 
@@ -91,4 +94,23 @@ context('Route parser', () => {
 
     })
 
+  })
+
+  context('Routing', () => {
+    describe('Routing with descending priority route list', () => {
+      const routes = [
+        { route: '/artists/:name/album/:albumName', fn: () => 'Album page' },
+        { route: '/artists/:name/*', fn: () => 'Artist page' }
+      ]
+
+      const router = routing(routes)
+
+      it('should match routes in order', () => {
+        const routingResult1 = router('/artists/Aphex%20Twin/album/Syro')
+        expect(routingResult1).to.equal('Album page')
+
+        const routingResult2 = router('/artists/Aphex%20Twin/gigs')
+        expect(routingResult2).to.equal('Artist page')
+      })
+    })
   })
