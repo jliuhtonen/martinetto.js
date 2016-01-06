@@ -3,7 +3,7 @@ import {findFirstTruthy} from './utils'
 
 export function routing(routeDefs) {
 
-  const routeMatchers = routes.map(routeDef => ({
+  const routeMatchers = routeDefs.map(routeDef => ({
     match: parseRoute(routeDef.route),
     fn: routeDef.fn
   }))
