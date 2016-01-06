@@ -1,7 +1,7 @@
 # martinetto.js
 [![Build Status](https://travis-ci.org/jliuhtonen/martinetto.js.svg?branch=master)](https://travis-ci.org/jliuhtonen/martinetto.js)
 
-Martinetto.js is a micro-library for parsing and matching relative url paths or _routes_. It supports named path parameters and multiple wildcards.
+Martinetto.js is a micro-library for parsing and matching relative url paths or _routes_. It supports named path parameters and multiple wildcards. It also parses the fragment and query parts for matched routes.
 
 ## Usage
 
