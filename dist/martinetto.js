@@ -56,6 +56,53 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.routing = routing;
+
+	var _routeParser = __webpack_require__(1);
+
+	var _utils = __webpack_require__(2);
+
+	function routing(routeDefs) {
+
+	  var routeMatchers = routeDefs.map(function (routeDef) {
+	    return {
+	      match: (0, _routeParser.parseRoute)(routeDef.route),
+	      fn: routeDef.fn
+	    };
+	  });
+
+	  return function (currentPath) {
+	    var matchingResult = firstMatchingRoute(routeMatchers, currentPath);
+
+	    if (matchingResult) {
+	      return matchingResult.matcher.fn(matchingResult.result);
+	    } else {
+	      return null;
+	    }
+	  };
+	}
+
+	function firstMatchingRoute(matchers, currentPath) {
+	  return (0, _utils.findFirstTruthy)(matchers, function (matcher) {
+	    var result = matcher.match(currentPath);
+
+	    if (result) {
+	      return { matcher: matcher, result: result };
+	    } else {
+	      return null;
+	    }
+	  });
+	}
+
+/***/ },
+/* 1 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
 	var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; })();
 
 	Object.defineProperty(exports, "__esModule", {
@@ -63,9 +110,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 	exports.parseRoute = parseRoute;
 
-	var _utils = __webpack_require__(1);
+	var _utils = __webpack_require__(2);
 
-	var _routeParsing = __webpack_require__(2);
+	var _escapeStringRegexp = __webpack_require__(3);
+
+	var _escapeStringRegexp2 = _interopRequireDefault(_escapeStringRegexp);
 
 	var _parameterExtract = __webpack_require__(4);
 
@@ -77,13 +126,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var fragmentSeparator = '#';
 	var querySeparator = '?';
+	var namedParamPattern = /^:\w+$/;
+	var allowedPathChars = "A-Za-z0-9_\\.~:@\\-%!\\$&'\\(\\)\\*\\+,;=";
+	var wildcardTokenSeparator = '*';
+	var wildcardToken = { type: 'wildcard', value: 'wildcard', pattern: '([' + allowedPathChars + '/]*)' };
+	var pathTokenSeparator = '/';
+	var pathTokenSeparatorRegExp = (0, _escapeStringRegexp2.default)(pathTokenSeparator);
 
 	function parseRoute(route) {
 	  var prefix = arguments.length <= 1 || arguments[1] === undefined ? '' : arguments[1];
 
 	  var routeToParse = (0, _utils.pathWithoutPrefix)(route, prefix);
-	  var routeTokens = (0, _routeParsing.asTokens)(routeToParse);
-	  var routeRegExp = new RegExp((0, _routeParsing.toPattern)(routeTokens));
+	  var routeTokens = asTokens(routeToParse);
+	  var routeRegExp = new RegExp(toPattern(routeTokens));
 	  var expectedParamTokens = routeTokens.filter(function (token) {
 	    return token.type !== 'literal';
 	  });
@@ -137,8 +192,41 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return { path: path, query: query, fragment: fragment };
 	}
 
+	function asTokens(path) {
+	  var wildcardTokens = path.split(wildcardTokenSeparator);
+	  var tokenizedPaths = wildcardTokens.map(function (path) {
+	    return path.split(pathTokenSeparator).filter(_utils.notEmpty).map(stringToPathToken);
+	  });
+
+	  var tokenizedWithWildcards = (0, _utils.intersperse)(tokenizedPaths, wildcardToken);
+
+	  return (0, _utils.flatten)(tokenizedWithWildcards);
+	}
+
+	function toPattern(routeTokens) {
+	  return routeTokens.map(function (token) {
+	    return token.pattern;
+	  }).join(pathTokenSeparatorRegExp);
+	}
+
+	function stringToPathToken(part) {
+	  if (part.match(namedParamPattern)) {
+	    return {
+	      type: 'pathParam',
+	      value: part.substring(1),
+	      pattern: '([' + allowedPathChars + ']+)'
+	    };
+	  } else {
+	    return {
+	      type: 'literal',
+	      value: part,
+	      pattern: (0, _escapeStringRegexp2.default)(part)
+	    };
+	  }
+	}
+
 /***/ },
-/* 1 */
+/* 2 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -152,6 +240,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.notEmpty = notEmpty;
 	exports.pathWithoutPrefix = pathWithoutPrefix;
 	exports.splitAtFirst = splitAtFirst;
+	exports.findFirstTruthy = findFirstTruthy;
 	function flatten(arr) {
 	  return arr.reduce(function (flattened, item) {
 	    return flattened.concat(item);
@@ -195,67 +284,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	}
 
-/***/ },
-/* 2 */
-/***/ function(module, exports, __webpack_require__) {
+	function findFirstTruthy(items, fn) {
+	  for (var i = 0; i < items.length; ++i) {
+	    var item = items[i];
+	    var fnVal = fn(item);
 
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.asTokens = asTokens;
-	exports.toPattern = toPattern;
-
-	var _utils = __webpack_require__(1);
-
-	var _escapeStringRegexp = __webpack_require__(3);
-
-	var _escapeStringRegexp2 = _interopRequireDefault(_escapeStringRegexp);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var namedParamPattern = /^:\w+$/;
-
-	var allowedPathChars = "A-Za-z0-9_\\.~:@\\-%!\\$&'\\(\\)\\*\\+,;=";
-
-	var wildcardTokenSeparator = '*';
-	var wildcardToken = { type: 'wildcard', value: 'wildcard', pattern: '([' + allowedPathChars + '/]*)' };
-
-	var pathTokenSeparator = '/';
-	var pathTokenSeparatorRegExp = (0, _escapeStringRegexp2.default)(pathTokenSeparator);
-
-	function asTokens(path) {
-	  var wildcardTokens = path.split(wildcardTokenSeparator);
-	  var tokenizedPaths = wildcardTokens.map(function (path) {
-	    return path.split(pathTokenSeparator).filter(_utils.notEmpty).map(stringToPathToken);
-	  });
-
-	  var tokenizedWithWildcards = (0, _utils.intersperse)(tokenizedPaths, wildcardToken);
-
-	  return (0, _utils.flatten)(tokenizedWithWildcards);
-	}
-
-	function toPattern(routeTokens) {
-	  return routeTokens.map(function (token) {
-	    return token.pattern;
-	  }).join(pathTokenSeparatorRegExp);
-	}
-
-	function stringToPathToken(part) {
-	  if (part.match(namedParamPattern)) {
-	    return {
-	      type: 'pathParam',
-	      value: part.substring(1),
-	      pattern: '([' + allowedPathChars + ']+)'
-	    };
-	  } else {
-	    return {
-	      type: 'literal',
-	      value: part,
-	      pattern: (0, _escapeStringRegexp2.default)(part)
-	    };
+	    if (fnVal) {
+	      return fnVal;
+	    }
 	  }
+
+	  return null;
 	}
 
 /***/ },
@@ -331,7 +370,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 	exports.default = parseQueryParams;
 
-	var _utils = __webpack_require__(1);
+	var _utils = __webpack_require__(2);
 
 	var queryParamSeparator = '&';
 	var keyValueSeparator = '=';
