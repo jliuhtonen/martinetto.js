@@ -99,8 +99,14 @@ context('Route parser', () => {
   context('Routing', () => {
     describe('Routing with descending priority route list', () => {
       const routes = [
-        { route: '/artists/:name/album/:albumName', fn: () => 'Album page' },
-        { route: '/artists/:name/*', fn: () => 'Artist page' }
+        { route: '/artists/:name/album/:albumName', fn: (routeData) => {
+          console.log(routeData)
+          return 'Album page'
+        } },
+        { route: '/artists/:name/*', fn: (routeData) =>  {
+          console.log(routeData)
+          return 'Artist page'
+        } }
       ]
 
       const router = routing(routes)
@@ -111,6 +117,25 @@ context('Route parser', () => {
 
         const routingResult2 = router('/artists/Aphex%20Twin/gigs')
         expect(routingResult2).to.equal('Artist page')
+      })
+
+    })
+
+    describe('Routing with additional parameter passing', () => {
+      const routes = [
+        { route: '/plus/:num', fn: (routeData, num2) => {
+          return Number(routeData.pathParams.num) + num2
+        } },
+        { route: '/plus/:num1/:num2', fn: (routeData) =>  {
+          return Number(routeData.pathParams.num1) + Number(routeData.pathParams.num2)
+        } }
+      ]
+
+      const router = routing(routes)
+
+      it('should give the additional parameters to the route fn', () => {
+        const result = router('/plus/3', 5)
+        expect(result).to.equal(8)
       })
     })
   })

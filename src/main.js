@@ -8,11 +8,11 @@ export function routing(routeDefs) {
     fn: routeDef.fn
   }))
 
-  return function(currentPath) {
+  return function(currentPath, ...args) {
     const matchingResult = firstMatchingRoute(routeMatchers, currentPath)
 
     if(matchingResult) {
-      return matchingResult.matcher.fn(matchingResult.result)
+        return matchingResult.matcher.fn(matchingResult.result, ...args)
     } else {
       return null
     }
