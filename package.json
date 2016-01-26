@@ -1,12 +1,12 @@
 {
-  "name": "martinetto.js",
-  "version": "1.1.0",
+  "name": "martinetto",
+  "version": "1.1.3",
   "repository": {
     "type": "git",
     "url": "https://github.com/jliuhtonen/martinetto.js.git"
   },
   "description": "A modular, functional JS route parser micro library",
-  "main": "src/index.js",
+  "main": "dist/martinetto.js",
   "scripts": {
     "compile": "webpack",
     "test": "mocha --compilers js:babel-register"
