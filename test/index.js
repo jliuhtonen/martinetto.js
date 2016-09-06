@@ -2,10 +2,10 @@ const mocha = require('mocha')
 const chai = require('chai')
 const expect = chai.expect
 
-const MartinettoParser = require('../src/routeParser')
+const MartinettoParser = require('../dist/routeParser')
 const parseRoute = MartinettoParser.parseRoute
 
-const MartinettoRouter = require('../src/main')
+const MartinettoRouter = require('../dist/main')
 const routing = MartinettoRouter.routing
 
 context('Route parser', () => {
