@@ -14,15 +14,12 @@ context('Route parser', () => {
     const route = parseRoute('/users/:username/lists/:title')
 
     it('should match valid routes and parse query params', () => {
-      const path = '/users/janne/lists/2015?filter=name&criteria=Aphex%20Twin'
+      const path = '/users/janne/lists/2015'
       const result = route(path)
       expect(result).to.exist
       expect(result.path).to.equal('/users/janne/lists/2015')
       expect(result.pathParams.username).to.equal('janne')
       expect(result.pathParams.title).to.equal('2015')
-      expect(result.queryParams).to.exist
-      expect(result.queryParams.filter).to.equal('name')
-      expect(result.queryParams.criteria).to.equal('Aphex Twin')
     })
 
     it('should not match invalid named parameter route', () => {

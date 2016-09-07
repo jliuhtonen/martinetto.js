@@ -1,9 +1,6 @@
 import {zip, intersperse, flatten, notEmpty, pathWithoutPrefix} from './utils'
 import {extractWildcardParams, extractPathParams, RouteParam, RouteParamType} from './parameterExtract'
-import {parseQueryParams, QueryParamMap} from './queryParams'
 
-const fragmentSeparator = '#'
-const querySeparator = '?'
 const namedParamPattern = /^:\w+$/
 const allowedPathChars = "A-Za-z0-9_\\.~:@\\-%!\\$&'\\(\\)\\*\\+,;="
 const wildcardTokenSeparator = '*'
@@ -13,15 +10,7 @@ const pathTokenSeparatorRegExp = escapeStringRegexp(pathTokenSeparator)
 
 export interface RouteMatch {
   path: string,
-  fragment: string,
-  queryParams: QueryParamMap,
   wildcards: Array<string>
-}
-
-interface RelativeUrl {
-  path: string,
-  query: string,
-  fragment: string
 }
 
 export type RouteMatcher = (uriPath: string) => RouteMatch
@@ -34,10 +23,7 @@ export function parseRoute(route: string, prefix = ''): RouteMatcher {
     .filter(token => token.type !== RouteParamType.literal)
 
   return function(uriPath) {
-    const pathParts = parseRelativePathParts(uriPath)
-    const currentPath = pathParts.path
-
-    const pathToMatch = pathWithoutPrefix(currentPath, prefix)
+    const pathToMatch = pathWithoutPrefix(uriPath, prefix)
     const paramMatches = pathToMatch.match(routeRegExp)
     const isMatch = !!paramMatches
 
@@ -49,24 +35,14 @@ export function parseRoute(route: string, prefix = ''): RouteMatcher {
 
       const pathParams = extractPathParams(paramValuePairs)
       const wildcards = extractWildcardParams(paramValuePairs)
-      const queryParams = parseQueryParams(pathParts.query)
 
       return {
-        path: currentPath,
-        fragment: pathParts.fragment,
-        queryParams,
+        path: uriPath,
         pathParams,
         wildcards
       }
     }
   }
-}
-
-function parseRelativePathParts(relativePath: string): RelativeUrl {
-  const [pathWithoutFragment, fragment = ''] = relativePath.split(fragmentSeparator)
-  const [path, query = ''] = pathWithoutFragment.split(querySeparator)
-
-  return { path, query, fragment }
 }
 
 function asTokens(path: string): Array<RouteParam> {
