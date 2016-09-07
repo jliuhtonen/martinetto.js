@@ -1,4 +1,4 @@
-import {parseRoute, RouteMatch, RouteMatcher} from './routeParser'
+import {parse, RouteMatcher, RouteMatch, RouteParameters} from './parser'
 import {findFirstTruthy} from './utils'
 
 type RouteExecutor = (route: RouteMatch, ...args: any[]) => any
@@ -21,7 +21,7 @@ interface Result {
 export function routing(routeDefs: Array<RouteDef>): (currentPath: string, ...args: any[]) => any {
 
   const routeMatchers = routeDefs.map(routeDef => ({
-    match: parseRoute(routeDef.route),
+    match: parse(routeDef.route),
     fn: routeDef.fn
   }))
 

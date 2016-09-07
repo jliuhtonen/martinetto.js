@@ -8,6 +8,7 @@
   },
   "files": [
     "./typings/index.d.ts",
+    "./types/parsimmon.d.ts",
     "./src/main.ts"
   ]
 }

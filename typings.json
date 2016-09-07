@@ -1,6 +1,6 @@
 {
   "name": "martinetto",
   "dependencies": {
-    "escape-string-regexp": "registry:npm/escape-string-regexp#1.0.0+20160723033700"
+    "object-assign": "registry:npm/object-assign#4.0.1+20160301180549"
   }
 }

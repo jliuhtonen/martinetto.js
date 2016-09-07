@@ -2,8 +2,8 @@ const mocha = require('mocha')
 const chai = require('chai')
 const expect = chai.expect
 
-const MartinettoParser = require('../dist/routeParser')
-const parseRoute = MartinettoParser.parseRoute
+const MartinettoParser = require('../dist/pathParser')
+const parseRoute = MartinettoParser.parse
 
 const MartinettoRouter = require('../dist/main')
 const routing = MartinettoRouter.routing
@@ -13,19 +13,19 @@ context('Route parser', () => {
   describe('Route with named parameters', () => {
     const route = parseRoute('/users/:username/lists/:title')
 
-    it('should match valid routes and parse query params', () => {
+    it('should match valid routes', () => {
       const path = '/users/janne/lists/2015'
       const result = route(path)
       expect(result).to.exist
       expect(result.path).to.equal('/users/janne/lists/2015')
-      expect(result.pathParams.username).to.equal('janne')
-      expect(result.pathParams.title).to.equal('2015')
+      expect(result.params.username).to.equal('janne')
+      expect(result.params.title).to.equal('2015')
     })
 
     it('should not match invalid named parameter route', () => {
-      const path = '/users/janne/artists/Aphex%20Twin'
+      const path = '/users/janne|artists/Aphex%20Twin'
       const result = route(path)
-      expect(result).to.be.null
+      expect(result).to.be.undefined
     })
 
     it('should consider route to be the same with or without trailing slash', () => {
@@ -33,8 +33,8 @@ context('Route parser', () => {
       const result = route(pathWithSlash)
       expect(result).to.exist
       expect(result.path).to.equal(pathWithSlash)
-      expect(result.pathParams.username).to.equal('joe')
-      expect(result.pathParams.title).to.equal('rock-anthems')
+      expect(result.params.username).to.equal('joe')
+      expect(result.params.title).to.equal('rock-anthems')
     })
 
     it('should URI decode parameters', () => {
@@ -42,50 +42,29 @@ context('Route parser', () => {
       const result = route(path)
       expect(result).to.exist
       expect(result.path).to.equal(path)
-      expect(result.pathParams.username).to.equal('John Doe')
-      expect(result.pathParams.title).to.equal('Ääniä')
+      expect(result.params.username).to.equal('John Doe')
+      expect(result.params.title).to.equal('Ääniä')
     })
 
   })
 
   describe('Route with wildcards', () => {
 
-    it('should provide wildcard path param as the first array element', () => {
+    it('should provide wildcard path param with the "wildcard" key', () => {
       const route = parseRoute('/rest/*')
       const path = '/rest/artists/Deerhunter'
       const result = route(path)
       expect(result).to.exist
-      expect(Object.keys(result.pathParams).length).to.equal(0)
-      expect(result.wildcards.length).to.equal(1)
-      expect(result.wildcards[0]).to.equal('artists/Deerhunter')
+      expect(result.params.wildcard).to.equal('artists/Deerhunter')
     })
 
-    it('should consider route to be the same with or without single trailing slash', () => {
-      const route = parseRoute('/rest/*/')
-      const path = '/rest/artists/Deerhunter'
-      const result = route(path)
-      expect(result).to.exist
-      expect(Object.keys(result.pathParams).length).to.equal(0)
-      expect(result.wildcards.length).to.equal(1)
-      expect(result.wildcards[0]).to.equal('artists/Deerhunter')  })
-
-      it('should support multiple wildcard params', () => {
-        const route = parseRoute('/files/*/filter/*')
-        const path = '/files/photos/2015/spain/filter/Barcelona/Monday'
-        const result = route(path)
-        expect(result).to.exist
-        expect(result.wildcards.length).to.equal(2)
-        expect(result.wildcards[0]).to.equal('photos/2015/spain')
-        expect(result.wildcards[1]).to.equal('Barcelona/Monday')
-      })
 
       it('should support url encoded wildcard params', () => {
         const route = parseRoute('/rest/*')
         const path = '/rest/artist/Sigur%20R%C3%B3s'
         const result = route(path)
         expect(result).to.exist
-        expect(result.wildcards.length).to.equal(1)
-        expect(result.wildcards[0]).to.equal('artist/Sigur Rós')
+        expect(result.params.wildcard).to.equal('artist/Sigur Rós')
       })
 
 
@@ -121,10 +100,10 @@ context('Route parser', () => {
     describe('Routing with additional parameter passing', () => {
       const routes = [
         { route: '/plus/:num', fn: (routeData, num2) => {
-          return Number(routeData.pathParams.num) + num2
+          return Number(routeData.params.num) + num2
         } },
         { route: '/plus/:num1/:num2', fn: (routeData) =>  {
-          return Number(routeData.pathParams.num1) + Number(routeData.pathParams.num2)
+          return Number(routeData.params.num1) + Number(routeData.params.num2)
         } }
       ]
 
