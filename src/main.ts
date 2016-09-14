@@ -1,4 +1,4 @@
-import {parse, RouteMatcher, RouteMatch, RouteParameters} from './parser'
+import {parse, RouteMatcher, RouteMatch, RouteParameters} from './routeParser'
 import {findFirstTruthy} from './utils'
 
 type RouterDef = Array<RouteDef>

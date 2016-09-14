@@ -2,11 +2,10 @@ const mocha = require('mocha')
 const chai = require('chai')
 const expect = chai.expect
 
-const MartinettoParser = require('../dist/pathParser')
+const MartinettoParser = require('../dist/routeParser')
 const parseRoute = MartinettoParser.parse
 
-const MartinettoRouter = require('../dist/main')
-const routing = MartinettoRouter.routing
+const routing = require('../dist/bundle')
 
 context('Route parser', () => {
 
@@ -59,13 +58,13 @@ context('Route parser', () => {
     })
 
 
-      it('should support url encoded wildcard params', () => {
-        const route = parseRoute('/rest/*')
-        const path = '/rest/artist/Sigur%20R%C3%B3s'
-        const result = route(path)
-        expect(result).to.exist
-        expect(result.params.wildcard).to.equal('artist/Sigur Rós')
-      })
+    it('should support url encoded wildcard params', () => {
+      const route = parseRoute('/rest/*')
+      const path = '/rest/artist/Sigur%20R%C3%B3s'
+      const result = route(path)
+      expect(result).to.exist
+      expect(result.params.wildcard).to.equal('artist/Sigur Rós')
+    })
 
 
     })
