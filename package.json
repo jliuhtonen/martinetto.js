@@ -15,8 +15,7 @@
   },
   "keywords": [
     "route",
-    "parser",
-    "micro-library"
+    "router"
   ],
   "author": "Janne Liuhtonen",
   "license": "MIT",
