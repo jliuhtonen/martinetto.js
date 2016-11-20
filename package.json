@@ -6,11 +6,12 @@
     "url": "https://github.com/jliuhtonen/martinetto.js.git"
   },
   "description": "A modular, functional JS route parser micro library",
-  "main": "dist/main.js",
+  "main": "dist/bundle.js",
   "scripts": {
     "compile": "tsc",
     "test": "npm run compile && mocha --compilers js:babel-register",
-    "bundle": "tsc && rollup --config"
+    "bundle": "tsc && rollup --config",
+    "prepublish": "npm run bundle"
   },
   "keywords": [
     "route",
