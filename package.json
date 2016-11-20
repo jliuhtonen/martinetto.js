@@ -9,7 +9,7 @@
   "main": "dist/bundle.js",
   "scripts": {
     "compile": "tsc",
-    "test": "npm run compile && mocha --compilers js:babel-register",
+    "test": "npm run bundle && mocha --compilers js:babel-register",
     "bundle": "tsc && rollup --config",
     "prepublish": "npm run bundle"
   },

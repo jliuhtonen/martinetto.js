@@ -1,5 +1,5 @@
 import {parse, RouteMatcher, RouteMatch, RouteParameters} from './routeParser'
-import {findFirstTruthy} from './utils'
+import {findFirstTruthy, removeTrailingSlash} from './utils'
 
 type RouterDef = Array<RouteDef>
 type RouteDef = ConcreteRouteDef | SubrouterDef
@@ -68,7 +68,7 @@ function expandRoute(routeDef: RouteDef, routePrefix = ''): Array<ConcreteRouteD
   } else {
     const subrouter = routeDef as SubrouterDef
     const subs = expandRoutes(subrouter.router).map(({route, fn}) => {
-      return {route: `${subrouter.route}/${route}`, fn}
+      return {route: `${removeTrailingSlash(subrouter.route)}${route}`, fn}
     })
     return subs
   }

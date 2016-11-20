@@ -96,6 +96,31 @@ context('Route parser', () => {
 
     })
 
+    describe('Subrouting', () => {
+      const albumRouter = [
+        {
+          route: '/year/:year', 
+          fn: (routeData) => `year ${routeData.params.year}`
+        }
+      ]
+
+      const artistRouter = [{
+        route: '/:name',
+        fn: (routeData) => `artist ${routeData.params.name}`
+      }]
+
+      const routes = [
+        {route: '/artists/', router: artistRouter},
+        {route: '/albums', router: albumRouter}
+      ]
+
+      const router = routing(routes)
+
+      it('should match routes from a subrouter', () => {
+        expect(router('/artists/American%20Football')).to.equal('artist American Football')
+      })
+    })
+
     describe('Routing with additional parameter passing', () => {
       const routes = [
         { route: '/plus/:num', fn: (routeData, num2) => {

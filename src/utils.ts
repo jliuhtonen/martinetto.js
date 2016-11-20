@@ -15,3 +15,7 @@ export function findFirstTruthy<A, B>(items: Array<A>, fn: (a: A) => B): B {
 
   return null
 }
+
+export function removeTrailingSlash(str: string): string {
+  return str.replace(/(^.+)\/$/, '$1')
+}
