@@ -1,5 +1,5 @@
 import * as P from 'parsimmon'
-import assign = require('object-assign/index')
+import * as objectAssign from 'object-assign'
 
 enum RouteParameterType {Literal, PathParameter, Wildcard}
 
@@ -41,7 +41,7 @@ export function parse(str: string): RouteMatcher {
    const params = routeParameters.reduce((paramsObj, {paramType, name, value}) => {
      const obj: RouteParameters = {}
      obj[name] = decodeURIComponent(value)
-     return assign(paramsObj, obj)
+     return objectAssign(paramsObj, obj)
    }, routeParamMap)
 
    return {path: uri, params}
