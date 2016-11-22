@@ -1,16 +1,16 @@
 import {parse, RouteMatcher, RouteMatch, RouteParameters} from './routeParser'
 import {findFirstTruthy, removeTrailingSlash} from './utils'
 
-type RouterDef = Array<RouteDef>
-type RouteDef = ConcreteRouteDef | SubrouterDef
+export type RouterDef = Array<RouteDef>
+export type RouteDef = ConcreteRouteDef | SubrouterDef
 type RouteExecutor = (route: RouteMatch, ...args: any[]) => any
 
-interface ConcreteRouteDef {
+export interface ConcreteRouteDef {
   route: string,
   fn: RouteExecutor
 }
 
-interface SubrouterDef {
+export interface SubrouterDef {
   route: string,
   router: RouterDef
 }
