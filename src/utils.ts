@@ -1,14 +1,12 @@
-export function findFirstTruthy<A, B>(items: Array<A>, fn: (a: A) => B): B {
-  for(let i = 0; i < items.length; ++i) {
-    const item = items[i]
-    const fnVal = fn(item)
-
-    if(fnVal) {
-      return fnVal
+export function collectFirst<A, B>(transformation: (a: A) => B, condition: (b: B) => boolean, xs: A[]): B | undefined {
+  for (let i = 0; i < xs.length; ++i) {
+    const transformed = transformation(xs[i])
+    if(condition(transformed) === true) {
+      return transformed
     }
   }
 
-  return null
+  return undefined
 }
 
 export function removeTrailingSlash(str: string): string {

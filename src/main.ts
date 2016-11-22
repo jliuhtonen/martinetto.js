@@ -1,5 +1,5 @@
 import {parse, RouteMatcher, RouteMatch, RouteParameters} from './routeParser'
-import {findFirstTruthy, removeTrailingSlash} from './utils'
+import {collectFirst, removeTrailingSlash} from './utils'
 
 export type RouterDef = Array<RouteDef>
 export type RouteDef = ConcreteRouteDef | SubrouterDef
@@ -46,15 +46,12 @@ export default function routing(routerDef: RouterDef): (currentPath: string, ...
 }
 
 function firstMatchingRoute(matchers: Array<Route>, currentPath: string): Result {
-  return findFirstTruthy(matchers, matcher => {
-    const result = matcher.match(currentPath)
+  return collectFirst(matcher => routeMatch(currentPath, matcher), result => !!result, matchers)
+}
 
-    if(result) {
-      return {matcher, result}
-    } else {
-      return null
-    }
-  })
+function routeMatch(currentPath: string, matcher: Route): Result | undefined {
+  const result = matcher.match(currentPath)
+  return result ? {matcher, result} : undefined
 }
 
 function expandRoutes(routerDef: RouterDef): Array<ConcreteRouteDef> {
