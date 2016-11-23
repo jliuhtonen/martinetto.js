@@ -12,6 +12,7 @@ export default {
     cleanup(),
     uglify()
   ],
+  exports: 'named',
   moduleName: 'martinetto',
   dest: 'dist/bundle.js'
 }
