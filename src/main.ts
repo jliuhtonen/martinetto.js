@@ -1,6 +1,6 @@
 import {parse, RouteMatcher, RouteMatch, RouteParameters} from './routeParser'
 import {collectFirst, removeTrailingSlash} from './utils'
-import {linkClickListener} from './links'
+import {linkClickListener} from './client'
 
 export type RouterDef = Array<RouteDef>
 export type RouteDef = ConcreteRouteDef | SubrouterDef
