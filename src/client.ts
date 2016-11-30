@@ -1,5 +1,11 @@
 const nonProcessedLinkAttr = 'data-no-routing'
 
+export function historyListener(onHistoryChange: (href: string) => void) {
+  window.onpopstate = () => {
+    onHistoryChange(document.location.href)
+  }
+}
+
 export function linkClickListener (handler: (path: string) => void) {
   window.onclick = (e) => {
     if (e.ctrlKey || e.altKey || e.shiftKey || e.metaKey || e.button && e.button !== 0) {
