@@ -1,11 +1,11 @@
-const mocha = require('mocha')
-const chai = require('chai')
+import mocha from 'mocha'
+import chai from 'chai'
 const expect = chai.expect
 
 const MartinettoParser = require('../dist/routeParser')
 const parseRoute = MartinettoParser.parse
 
-const routing = require('../dist/bundle')
+import {routing} from '../dist/bundle'
 
 context('Route parser', () => {
 
