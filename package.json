@@ -1,11 +1,11 @@
 {
-  "name": "martinetto",
-  "version": "1.1.3",
+  "name": "refractive",
+  "version": "0.1.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jliuhtonen/martinetto.js.git"
+    "url": "https://github.com/jliuhtonen/refractive.git"
   },
-  "description": "A modular, functional JS route parser micro library",
+  "description": "Functional client and server side router",
   "main": "dist/bundle.js",
   "scripts": {
     "compile": "tsc",
@@ -15,7 +15,11 @@
   },
   "keywords": [
     "route",
-    "router"
+    "router",
+    "client",
+    "server",
+    "isomorphic",
+    "node"
   ],
   "author": "Janne Liuhtonen",
   "license": "MIT",
