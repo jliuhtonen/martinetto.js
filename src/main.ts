@@ -3,7 +3,7 @@ import {collectFirst, removeTrailingSlash} from './utils'
 
 export type RouterDef = Array<RouteDef>
 export type RouteDef = ConcreteRouteDef | SubrouterDef
-type RouteExecutor = (route: RouteMatch, ...args: any[]) => any
+export type RouteExecutor = (route: RouteMatch, ...args: any[]) => any
 
 export interface ConcreteRouteDef {
   route: string,
@@ -13,16 +13,6 @@ export interface ConcreteRouteDef {
 export interface SubrouterDef {
   route: string,
   router: RouterDef
-}
-
-interface Route {
-  match: RouteMatcher,
-  fn: RouteExecutor
-}
-
-interface Result {
-  matcher: Route,
-  result: RouteMatch
 }
 
 export {linkClickListener, historyListener} from './client'
@@ -46,6 +36,17 @@ export function routing(routerDef: RouterDef): (currentPath: string, ...args: an
     }
   }
 }
+
+interface Route {
+  match: RouteMatcher,
+  fn: RouteExecutor
+}
+
+interface Result {
+  matcher: Route,
+  result: RouteMatch
+}
+
 
 function firstMatchingRoute(matchers: Array<Route>, currentPath: string): Result {
   return collectFirst(matcher => routeMatch(currentPath, matcher), result => !!result, matchers)
