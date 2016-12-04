@@ -6,7 +6,7 @@ export function historyListener(onHistoryChange: (href: string) => void) {
   }
 }
 
-export function linkClickListener (handler: (path: string) => void) {
+export function linkClickListener (onClick: (path: string) => void) {
   window.onclick = (e) => {
     if (e.ctrlKey || e.altKey || e.shiftKey || e.metaKey || e.button && e.button !== 0) {
       return
@@ -24,7 +24,7 @@ export function linkClickListener (handler: (path: string) => void) {
     }
 
     e.preventDefault()
-    handler(link.href)
+    onClick(link.href)
     window.history.pushState({}, null, link.href)
   }
 }
