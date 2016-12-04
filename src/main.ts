@@ -1,6 +1,5 @@
 import {parse, RouteMatcher, RouteMatch, RouteParameters} from './routeParser'
 import {collectFirst, removeTrailingSlash} from './utils'
-import {linkClickListener} from './client'
 
 export type RouterDef = Array<RouteDef>
 export type RouteDef = ConcreteRouteDef | SubrouterDef
@@ -26,7 +25,7 @@ interface Result {
   result: RouteMatch
 }
 
-export const domLinkClickListener = linkClickListener
+export {linkClickListener, historyListener} from './client'
 
 export function routing(routerDef: RouterDef): (currentPath: string, ...args: any[]) => any {
   const expandedRoutes: Array<ConcreteRouteDef> = expandRoutes(routerDef)
