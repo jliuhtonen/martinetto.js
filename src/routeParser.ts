@@ -24,7 +24,7 @@ const pathParam = P.regexp(/:(\w+)/, 1).map(k => pathPart.map(v => pathParameter
 
 const pathToken = P.alt(wildcard, pathParam, literal)
 
-const path: P.Parser<P.Parser<RouteParameter>[]> = P.lazy(() => P.seq(pathSeparator, pathToken, path.or(P.eof)).map(combineArr))
+const path: P.Parser<P.Parser<RouteParameter>[]> = P.lazy(() => P.seqMap(pathSeparator, pathToken, path.or(P.eof), combineParsers))
 
 export function parse(str: string): RouteMatcher {
  const routeParseResult = path.parse(str)
@@ -48,14 +48,8 @@ export function parse(str: string): RouteMatcher {
  }
 }
 
-type Result<A> = A | Array<A> | void
-
-function combineArr<A>(res: Array<Result<A>>): Array<A> {
-  const [v1, v2, v3] = res
-  const a = (<A>v1)
-  const b = (<A>v2)
-  const arr = (<Array<A>>v3)
-  return [a, b].concat(arr || [])
+function combineParsers(a: P.Parser<RouteParameter>, b: P.Parser<RouteParameter>, cs: P.Parser<RouteParameter>[] | null) {
+  return [a, b].concat(cs || [])
 }
 
 function literalParameter(value: string): RouteParameter {
