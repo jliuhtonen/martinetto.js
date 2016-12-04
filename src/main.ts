@@ -58,7 +58,7 @@ function routeMatch(currentPath: string, matcher: Route): Result | undefined {
 }
 
 function expandRoutes(routerDef: RouterDef): Array<ConcreteRouteDef> {
-  const expandedRoutes: Array<ConcreteRouteDef> = []
+  const expandedRoutes: ConcreteRouteDef[] = []
   return routerDef.reduce((expanded, routeSpec) => expanded.concat(expandRoute(routeSpec)), expandedRoutes)
 }
 
@@ -75,6 +75,6 @@ function expandRoute(routeDef: RouteDef, routePrefix = ''): Array<ConcreteRouteD
 }
 
 function isExecutable(routeDef: SubrouterDef | ConcreteRouteDef): routeDef is ConcreteRouteDef {
-  const {fn} = (<ConcreteRouteDef>routeDef)
+  const {fn} = routeDef as ConcreteRouteDef
   return typeof fn === 'function'
 }
