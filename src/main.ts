@@ -1,6 +1,7 @@
 import {parse, RouteMatcher, RouteMatch, RouteParameters} from './routeParser'
 import {collectFirst, removeTrailingSlash} from './utils'
 
+export {RouteMatch, RouteParameters} from './routeParser'
 export type RouterDef = Array<RouteDef>
 export type RouteDef = ConcreteRouteDef | SubrouterDef
 export type RouteExecutor = (route: RouteMatch, ...args: any[]) => any

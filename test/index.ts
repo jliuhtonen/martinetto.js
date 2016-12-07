@@ -1,11 +1,7 @@
-import mocha from 'mocha'
-import chai from 'chai'
-const expect = chai.expect
+import {expect} from 'chai'
+import {parse as parseRoute} from '../dist/routeParser'
 
-const MartinettoParser = require('../dist/routeParser')
-const parseRoute = MartinettoParser.parse
-
-import {routing} from '../dist/bundle'
+import {routing, RouteMatch, RouterDef, SubrouterDef} from '../dist/main'
 
 context('Route parser', () => {
 
@@ -17,8 +13,8 @@ context('Route parser', () => {
       const result = route(path)
       expect(result).to.exist
       expect(result.path).to.equal('/users/janne/lists/2015')
-      expect(result.params.username).to.equal('janne')
-      expect(result.params.title).to.equal('2015')
+      expect(result.params['username']).to.equal('janne')
+      expect(result.params['title']).to.equal('2015')
     })
 
     it('should not match invalid named parameter route', () => {
@@ -32,8 +28,8 @@ context('Route parser', () => {
       const result = route(pathWithSlash)
       expect(result).to.exist
       expect(result.path).to.equal(pathWithSlash)
-      expect(result.params.username).to.equal('joe')
-      expect(result.params.title).to.equal('rock-anthems')
+      expect(result.params['username']).to.equal('joe')
+      expect(result.params['title']).to.equal('rock-anthems')
     })
 
     it('should URI decode parameters', () => {
@@ -41,8 +37,8 @@ context('Route parser', () => {
       const result = route(path)
       expect(result).to.exist
       expect(result.path).to.equal(path)
-      expect(result.params.username).to.equal('John Doe')
-      expect(result.params.title).to.equal('Ääniä')
+      expect(result.params['username']).to.equal('John Doe')
+      expect(result.params['title']).to.equal('Ääniä')
     })
 
   })
@@ -54,7 +50,7 @@ context('Route parser', () => {
       const path = '/rest/artists/Deerhunter'
       const result = route(path)
       expect(result).to.exist
-      expect(result.params.wildcard).to.equal('artists/Deerhunter')
+      expect(result.params['wildcard']).to.equal('artists/Deerhunter')
     })
 
 
@@ -63,7 +59,7 @@ context('Route parser', () => {
       const path = '/rest/artist/Sigur%20R%C3%B3s'
       const result = route(path)
       expect(result).to.exist
-      expect(result.params.wildcard).to.equal('artist/Sigur Rós')
+      expect(result.params['wildcard']).to.equal('artist/Sigur Rós')
     })
 
 
@@ -74,11 +70,11 @@ context('Route parser', () => {
   context('Routing', () => {
     describe('Routing with descending priority route list', () => {
       const routes = [
-        { route: '/artists/:name/album/:albumName', fn: (routeData) => {
+        { route: '/artists/:name/album/:albumName', fn: (routeData: RouteMatch) => {
           console.log(routeData)
           return 'Album page'
         } },
-        { route: '/artists/:name/*', fn: (routeData) =>  {
+        { route: '/artists/:name/*', fn: (routeData: RouteMatch) =>  {
           console.log(routeData)
           return 'Artist page'
         } }
@@ -97,19 +93,19 @@ context('Route parser', () => {
     })
 
     describe('Subrouting', () => {
-      const albumRouter = [
+      const albumRouter: RouterDef = [
         {
           route: '/year/:year', 
-          fn: (routeData) => `year ${routeData.params.year}`
+          fn: (routeData) => `year ${routeData.params['year']}`
         }
       ]
 
-      const artistRouter = [{
+      const artistRouter: RouterDef = [{
         route: '/:name',
-        fn: (routeData) => `artist ${routeData.params.name}`
+        fn: (routeData) => `artist ${routeData.params['name']}`
       }]
 
-      const routes = [
+      const routes: RouterDef = [
         {route: '/artists/', router: artistRouter},
         {route: '/albums', router: albumRouter}
       ]
@@ -123,11 +119,11 @@ context('Route parser', () => {
 
     describe('Routing with additional parameter passing', () => {
       const routes = [
-        { route: '/plus/:num', fn: (routeData, num2) => {
-          return Number(routeData.params.num) + num2
+        { route: '/plus/:num', fn: (routeData: RouteMatch, num2: number) => {
+          return Number(routeData.params['num']) + num2
         } },
-        { route: '/plus/:num1/:num2', fn: (routeData) =>  {
-          return Number(routeData.params.num1) + Number(routeData.params.num2)
+        { route: '/plus/:num1/:num2', fn: (routeData: RouteMatch) =>  {
+          return Number(routeData.params['num1']) + Number(routeData.params['num2'])
         } }
       ]
 

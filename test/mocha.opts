@@ -1,1 +1,4 @@
---require babel-register
+--recursive
+--timeout 10000
+--reporter nyan
+--compilers ts:ts-node/register
