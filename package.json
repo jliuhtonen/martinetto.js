@@ -7,6 +7,7 @@
   },
   "description": "Functional client and server side router",
   "main": "dist/bundle.js",
+  "types": "dist/main.d.ts",
   "scripts": {
     "compile": "tsc",
     "test": "npm run bundle && mocha",
