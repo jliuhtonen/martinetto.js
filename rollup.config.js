@@ -13,6 +13,6 @@ export default {
     uglify()
   ],
   exports: 'named',
-  moduleName: 'martinetto',
+  moduleName: 'refractive',
   dest: 'dist/bundle.js'
 }
