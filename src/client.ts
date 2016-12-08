@@ -14,7 +14,7 @@ export function linkClickListener (onClick: (path: string) => void) {
 
     const htmlElement = e.target as HTMLElement
 
-    const link = traverseWhile(shouldTraverseUp, n => n.parentNode as HTMLElement, htmlElement) as HTMLAnchorElement
+    const link = traverseWhile(shouldTraverseUp, n => n && n.parentNode as HTMLElement, htmlElement) as HTMLAnchorElement
     if (typeof link === 'undefined') {
       return
     }
@@ -25,7 +25,7 @@ export function linkClickListener (onClick: (path: string) => void) {
 
     e.preventDefault()
     onClick(link.href)
-    window.history.pushState({}, null, link.href)
+    window.history.pushState({}, undefined, link.href)
   }
 }
 
@@ -47,7 +47,7 @@ function elementHost(elem: HTMLAnchorElement): string | undefined {
 function hrefHost(href: string | undefined): string | undefined {
   if (typeof href === 'undefined') return undefined
   const matches = href.match(/^https?:\/\/(.*?)\//i)
-  return matches.length > 1 ? matches[1] : undefined
+  return matches && matches.length > 1 ? matches[1] : undefined
 }
 
 function traverseWhile<A>(condition: (v: A) => boolean, next: (v: A) => A, initialValue: A): A | undefined {

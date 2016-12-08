@@ -10,7 +10,7 @@ context('Route parser', () => {
 
     it('should match valid routes', () => {
       const path = '/users/janne/lists/2015'
-      const result = route(path)
+      const result: any = route(path)
       expect(result).to.exist
       expect(result.path).to.equal('/users/janne/lists/2015')
       expect(result.params['username']).to.equal('janne')
@@ -25,7 +25,7 @@ context('Route parser', () => {
 
     it('should consider route to be the same with or without trailing slash', () => {
       const pathWithSlash = '/users/joe/lists/rock-anthems'
-      const result = route(pathWithSlash)
+      const result: any = route(pathWithSlash)
       expect(result).to.exist
       expect(result.path).to.equal(pathWithSlash)
       expect(result.params['username']).to.equal('joe')
@@ -34,7 +34,7 @@ context('Route parser', () => {
 
     it('should URI decode parameters', () => {
       const path = '/users/John%20Doe/lists/%C3%84%C3%A4ni%C3%A4'
-      const result = route(path)
+      const result: any = route(path)
       expect(result).to.exist
       expect(result.path).to.equal(path)
       expect(result.params['username']).to.equal('John Doe')
@@ -48,7 +48,7 @@ context('Route parser', () => {
     it('should provide wildcard path param with the "wildcard" key', () => {
       const route = parseRoute('/rest/*')
       const path = '/rest/artists/Deerhunter'
-      const result = route(path)
+      const result: any = route(path)
       expect(result).to.exist
       expect(result.params['wildcard']).to.equal('artists/Deerhunter')
     })
@@ -57,7 +57,7 @@ context('Route parser', () => {
     it('should support url encoded wildcard params', () => {
       const route = parseRoute('/rest/*')
       const path = '/rest/artist/Sigur%20R%C3%B3s'
-      const result = route(path)
+      const result: any = route(path)
       expect(result).to.exist
       expect(result.params['wildcard']).to.equal('artist/Sigur Rós')
     })

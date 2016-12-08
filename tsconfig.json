@@ -3,6 +3,7 @@
     "outDir": "./dist/",
     "sourceMap": true,
     "noImplicitAny": true,
+    "strictNullChecks": true,
     "moduleResolution": "node",
     "target": "es5",
     "declaration": true

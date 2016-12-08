@@ -49,7 +49,7 @@ interface Result {
 }
 
 
-function firstMatchingRoute(matchers: Array<Route>, currentPath: string): Result {
+function firstMatchingRoute(matchers: Array<Route>, currentPath: string): Result | undefined {
   return collectFirst(matcher => routeMatch(currentPath, matcher), result => !!result, matchers)
 }
 

@@ -5,7 +5,7 @@ enum RouteParameterType {Literal, PathParameter, Wildcard}
 
 export interface RouteParameters { [name: string]: string }
 export interface RouteMatch { path: string, params: RouteParameters }
-export type RouteMatcher = (uri: string) => RouteMatch
+export type RouteMatcher = (uri: string) => RouteMatch | undefined
 
 interface RouteParameter {
   paramType: RouteParameterType,
@@ -28,24 +28,30 @@ const path: P.Parser<P.Parser<RouteParameter>[]> = P.lazy(() => P.seqMap(pathSep
 
 export function parse(str: string): RouteMatcher {
  const routeParseResult = path.parse(str)
- if (!routeParseResult.status) throw new Error('Invalid route pattern')
+ if (!(routeParseResult.status && routeParseResult.value)) throw new Error('Invalid route pattern')
  const uriParsers: P.Parser<RouteParameter>[] = routeParseResult.value
  const uriParser: P.Parser<RouteParameter[]> = P.seq(...uriParsers)
 
  return (uri) => {
    const parseResult = uriParser.parse(uri)
-   if (!parseResult.status) return undefined
+   if (!(parseResult.status && parseResult.value)) return undefined
 
-   const routeParameters = parseResult.value.filter(p => p.paramType !== RouteParameterType.Literal)
+   const routeParameters = parseResult.value.filter(p => p.paramType !== RouteParameterType.Literal && p.name !== undefined)
    const routeParamMap: RouteParameters = {}
-   const params = routeParameters.reduce((paramsObj, {paramType, name, value}) => {
-     const obj: RouteParameters = {}
-     obj[name] = decodeURIComponent(value)
-     return objectAssign(paramsObj, obj)
-   }, routeParamMap)
+   const params = routeParameters.reduce(appendToRouteParameterMap, routeParamMap)
 
    return {path: uri, params}
  }
+}
+
+function appendToRouteParameterMap(paramsObj: RouteParameters, {paramType, name, value}: RouteParameter): RouteParameters {
+  if (name) {
+    const obj: RouteParameters = {}
+    obj[name] = decodeURIComponent(value)
+    return objectAssign(paramsObj, obj)
+  } else {
+    return paramsObj
+  }
 }
 
 function combineParsers(a: P.Parser<RouteParameter>, b: P.Parser<RouteParameter>, cs: P.Parser<RouteParameter>[] | null) {
