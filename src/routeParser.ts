@@ -14,7 +14,7 @@ interface RouteParameter {
 }
 
 const allowedLiteralCharsPattern = /[\w-]+/
-const allowedPathCharsPattern = /[A-Za-z0-9_\.~:@\-%!\$&'\(\)\*\+,;=]+/
+const allowedPathCharsPattern = /[A-Za-z0-9_\.~:@\-%!\$&'\(\)\*\+,;=]*/
 
 const literal = P.regexp(allowedPathCharsPattern).map(v => P.string(v).map(literalParameter))
 const pathPart = P.regexp(allowedPathCharsPattern)
