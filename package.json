@@ -10,9 +10,13 @@
   "types": "dist/main.d.ts",
   "scripts": {
     "compile": "tsc",
-    "test": "npm run bundle && mocha",
-    "bundle": "tsc && rollup --config",
-    "prepublish": "npm run bundle"
+    "browser-test": "npm run start-test-server && wdio wdio.conf.js && npm run stop-test-server",
+    "unit-test": "mocha text/unit-tests",
+    "test": "npm run bundle && npm run unit-test && npm run browser-test",
+    "bundle": "npm run compile && rollup --config",
+    "prepublish": "npm run bundle",
+    "start-test-server": "http-server --silent . & echo $! > test-server.pid",
+    "stop-test-server": "(cat test-server.pid | xargs kill) && rm test-server.pid"
   },
   "keywords": [
     "route",
@@ -27,7 +31,11 @@
   "devDependencies": {
     "@types/chai": "^3.4.34",
     "@types/mocha": "^2.2.33",
+    "@types/webdriverio": "^4.0.32",
+    "browserstack-local": "^1.2.0",
     "chai": "^3.4.1",
+    "dotenv": "^2.0.0",
+    "http-server": "^0.9.0",
     "mocha": "^2.3.4",
     "rollup": "^0.35.10",
     "rollup-plugin-cleanup": "^0.1.4",
@@ -36,7 +44,11 @@
     "rollup-plugin-typescript": "^0.8.1",
     "rollup-plugin-uglify": "^1.0.1",
     "ts-node": "1.7.0",
-    "typescript": "2.0.10"
+    "typescript": "2.0.10",
+    "wdio-browserstack-service": "^0.1.4",
+    "wdio-mocha-framework": "^0.5.6",
+    "wdio-spec-reporter": "0.0.3",
+    "webdriverio": "^4.5.0"
   },
   "dependencies": {
     "@types/object-assign": "^4.0.30",

@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+  <head>
+    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"></script>
+    <script src="../dist/bundle.js"></script>
+  </head>
+  <body>
+    <section>
+      <header>
+        <h1>Refractive test app</h1>
+      </header>
+      <div id="app-content">
+      </div>
+    </section>
+    <script type="text/javascript">
+var routing = [{
+  route: '/',
+  fn: () => {
+    $('#app-content').html('HI')
+    return 'root'
+  }
+}]
+
+var route = Refractive.routing([{
+  route: '/test-app/',
+  router: routing
+}])
+
+console.log(route(window.location.pathname))
+    </script>
+  </body>
+</html>

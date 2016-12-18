@@ -1,7 +1,7 @@
 import {expect} from 'chai'
-import {parse as parseRoute} from '../dist/routeParser'
+import {parse as parseRoute} from '../../dist/routeParser'
 
-import {routing, RouteMatch, RouterDef, SubrouterDef} from '../dist/main'
+import {routing, RouteMatch, RouterDef, SubrouterDef} from '../../dist/main'
 
 context('Route parser', () => {
 
