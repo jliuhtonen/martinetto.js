@@ -15,7 +15,7 @@
     "test": "npm run bundle && npm run unit-test && npm run browser-test",
     "bundle": "npm run compile && rollup --config",
     "prepublish": "npm run bundle",
-    "start-test-server": "http-server --silent . & echo $! > test-server.pid",
+    "start-test-server": "(http-server --silent . & echo $! > test-server.pid) && sleep 3",
     "stop-test-server": "(cat test-server.pid | xargs kill) && rm test-server.pid"
   },
   "keywords": [
