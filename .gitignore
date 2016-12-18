@@ -6,3 +6,4 @@ dist/
 errorShots/
 *.pid
 *.log
+.DS_Store
