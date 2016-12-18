@@ -13,6 +13,6 @@ export default {
     uglify()
   ],
   exports: 'named',
-  moduleName: 'refractive',
+  moduleName: 'Refractive',
   dest: 'dist/bundle.js'
 }
