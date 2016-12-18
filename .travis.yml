@@ -4,3 +4,8 @@ node_js:
   - "6"
   - "5"
   - "4"
+addons:
+  browserstack:
+    username: 'janneliuhtonen1'
+    access_key:
+      secure: "fuDiiHHYJkGQ8O0e1Di/o0rUWetM4CER3uNFtnm+ALwm/PfUnkxA6Cte1JsnKfzhoIZ+lWaKaUe+pxgcOguVuHmGXU57fHH+WzOihwuQflXEovkaHuTxx3QcW4nN20YZoxKqHTdav9Bf1ZamD+6ohT3d9ESZWiP8Swr7Jq2ySwT49jyVtZbUmYKYE2P5Vzzz5zyKbFzhzi7UTaAO0iNDmAwpOr9HSBCHR0t94an7LLbs99NOVIJ8r0SKoGCb6yX1uurHXqDOmrORL8y5g/8rjwPAAFGoYP8EecWEp+yQkn/rIMTrBHIhsS32OG756VdZE9utH6mM1MDE3372Yt6Cy435SBV4yMJOKassrEIBjEQrrqSjZj0igR7/LQE0/hquaantNnXo5pGLxa/lXkMxei682bh4B74BOw2RBXgEiyEcZu4gHwkr9+u6dQoe/oK2GOLL50yGTblnhf2tMluvnZsOIcqwLlBPnPeYc6wrB3D7SSwmwVUx1jcDR2jKm6z+FluG1ieli0/GVKMmI9mZeptCxZYTNo8deYbX4u+tFQd5Xb9tqXtc5Jot45RvqjY/Gmj/oVIZqW0k3HiUtSfOsvfgqsbhRIm9AhUE59cMgPGEWqH3/omk0mT6D5J/MuOt7ZbX1fq+GdWCH/C2Gg3iRRFQsWt7nGFYmy54T/Y8YYY="

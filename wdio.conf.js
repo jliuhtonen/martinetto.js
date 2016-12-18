@@ -13,7 +13,8 @@ exports.config = {
   maxInstances: 10,
   capabilities: [{
     browserName: 'chrome',
-    'browserstack.local': true
+    'browserstack.local': true,
+    'browserstack.localIdentifier': process.env.BROWSERSTACK_LOCAL_IDENTIFIER
   }],
   sync: true,
   logLevel: 'result',
