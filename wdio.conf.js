@@ -14,6 +14,7 @@ exports.config = {
   capabilities: [{
     browserName: 'chrome',
     'browserstack.local': true,
+    project: 'Refractive',
     'browserstack.localIdentifier': process.env.BROWSERSTACK_LOCAL_IDENTIFIER
   }],
   sync: true,
