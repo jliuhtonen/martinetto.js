@@ -5,6 +5,11 @@
     <script src="../dist/bundle.js"></script>
   </head>
   <body>
+    <nav>
+      <a href="/test-app/contact">Catalog</a>
+      <a href="/test-app/products/tesla-model-s">Tesla Model S</a>
+      <a href="/test-app/products/fanta">Fanta</a>
+    </nav>
     <section>
       <header>
         <h1>Refractive test app</h1>
@@ -13,18 +18,53 @@
       </div>
     </section>
     <script type="text/javascript">
-var routing = [{
-  route: '/',
-  fn: () => {
-    $('#app-content').html('HI')
-    return 'root'
+var routing = [
+  {
+    route: '/',
+    fn: function() {
+      $('#app-content').text('HI')
+      return 'root'
+    }
+  },
+  {
+    route: '/contact',
+    fn: function() {
+      $('#app-content').text('Contact us')
+      return 'contact route'
+    }
+  },
+  {
+    route: '/products/:productId',
+    fn: function(match) {
+      console.log(match)
+      $('#app-content').text('product ' + match.params.productId)
+      return 'product route'
+    }
   }
-}]
+]
 
 var route = Refractive.routing([{
   route: '/test-app/',
   router: routing
 }])
+
+Refractive.linkClickListener(function(url) {
+  console.log('url ' + url)
+  var path = urlToPath(url)
+  console.log('link ' + path)
+  console.log(route(path))
+})
+
+Refractive.historyListener(function(url) {
+  console.log('history url ' + url)
+  var path = urlToPath(url)
+  console.log('history ' + path)
+  console.log(route(path))
+})
+
+function urlToPath(url) {
+  return /^https?:\/\/.*?(\/.*?)?(?:\?.*?)?(?:#.*?)?$/.exec(url)[1]
+}
 
 console.log(route(window.location.pathname))
     </script>
