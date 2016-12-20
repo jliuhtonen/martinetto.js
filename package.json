@@ -10,7 +10,7 @@
   "types": "dist/main.d.ts",
   "scripts": {
     "compile": "tsc",
-    "browser-test": "npm run start-test-server && wdio wdio.conf.js && npm run stop-test-server",
+    "browser-test": "test ! $REFRACTIVE_BROWSER_TESTS || (npm run start-test-server && wdio wdio.conf.js && npm run stop-test-server)",
     "unit-test": "mocha test/unit-tests",
     "test": "npm run bundle && npm run unit-test && npm run browser-test",
     "bundle": "npm run compile && rollup --config",
