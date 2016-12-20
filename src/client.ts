@@ -15,7 +15,7 @@ export function linkClickListener (onClick: (path: string) => void) {
     const htmlElement = e.target as HTMLElement
 
     const link = traverseWhile(shouldTraverseUp, n => n && n.parentNode as HTMLElement, htmlElement) as HTMLAnchorElement
-    if (typeof link === 'undefined') {
+    if (typeof link === 'undefined' || link === null) {
       return
     }
 
