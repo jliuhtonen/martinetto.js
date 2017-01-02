@@ -25,7 +25,7 @@ export function linkClickListener (onClick: (path: string) => void) {
 
     e.preventDefault()
     onClick(link.href)
-    window.history.pushState({}, undefined, link.href)
+    window.history.pushState({}, '', link.href)
   }
 }
 

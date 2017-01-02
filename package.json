@@ -44,7 +44,7 @@
     "rollup-plugin-typescript": "^0.8.1",
     "rollup-plugin-uglify": "^1.0.1",
     "ts-node": "1.7.0",
-    "typescript": "2.0.10",
+    "typescript": "2.1.4",
     "wdio-browserstack-service": "^0.1.4",
     "wdio-mocha-framework": "^0.5.6",
     "wdio-spec-reporter": "0.0.3",
