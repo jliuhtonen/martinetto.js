@@ -6,8 +6,7 @@
     "strictNullChecks": true,
     "moduleResolution": "node",
     "target": "es5",
-    "declaration": true,
-    "importHelpers": true
+    "declaration": true
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules"]
