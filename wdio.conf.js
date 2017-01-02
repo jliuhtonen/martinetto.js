@@ -1,5 +1,47 @@
 require('dotenv').config()
 const browserstack = require('browserstack-local')
+const objectAssign = require('object-assign')
+
+const commonCapabilityObj = {
+  'browserstack.local': true,
+  project: 'Refractive',
+  'browserstack.localIdentifier': process.env.BROWSERSTACK_LOCAL_IDENTIFIER
+}
+
+const capabilities = [
+{
+  'browser': 'Chrome',
+  'browserName': 'Latest Chrome'
+},
+{
+  'browser': 'Firefox',
+  'browserName': 'Latest Firefox'
+},
+{
+  'os': 'Windows',
+  'os_version': '10',
+  'browser': 'IE',
+  'browserName': 'IE 11 on Win 10',
+  'browser_version': '11.0',
+  'resolution': '1024x768'
+},
+{
+  'os': 'OS X',
+  'os_version': 'Sierra',
+  'browser': 'Safari',
+  'browserName': 'Safari 10 on OS X Sierra',
+  'browser_version': '10.0',
+  'resolution': '1024x768'
+},
+{
+  'os': 'Windows',
+  'os_version': '7',
+  'browser': 'IE',
+  'browserName': 'IE 10 on Win 7',
+  'browser_version': '10.0',
+  'resolution': '1024x768'
+},
+].map(capability => objectAssign(capability, commonCapabilityObj))
 
 exports.config = {
   user: process.env.BROWSERSTACK_USER,
@@ -11,12 +53,7 @@ exports.config = {
     // 'path/to/excluded/files'
   ],
   maxInstances: 10,
-  capabilities: [{
-    browserName: 'chrome',
-    'browserstack.local': true,
-    project: 'Refractive',
-    'browserstack.localIdentifier': process.env.BROWSERSTACK_LOCAL_IDENTIFIER
-  }],
+  capabilities: capabilities,
   sync: true,
   logLevel: 'result',
   coloredLogs: true,
