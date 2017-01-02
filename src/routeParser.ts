@@ -54,7 +54,7 @@ function appendToRouteParameterMap(paramsObj: RouteParameters, {paramType, name,
   }
 }
 
-function combineParsers(a: P.Parser<RouteParameter>, b: P.Parser<RouteParameter>, cs: P.Parser<RouteParameter>[] | null) {
+function combineParsers(a: P.Parser<RouteParameter>, b: P.Parser<RouteParameter>, cs: P.Parser<RouteParameter>[] | undefined): P.Parser<RouteParameter>[] {
   return [a, b].concat(cs || [])
 }
 
