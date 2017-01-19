@@ -32,7 +32,11 @@ export function parse(str: string): RouteMatcher {
  const uriParsers: P.Parser<RouteParameter>[] = routeParseResult.value
  const uriParser: P.Parser<RouteParameter[]> = P.seq(...uriParsers)
 
- return (uri) => {
+ return createRouteMatcher(uriParser)
+}
+
+function createRouteMatcher(uriParser: P.Parser<RouteParameter[]>): RouteMatcher {
+ return uri => {
    const parseResult = uriParser.parse(uri)
    if (!(parseResult.status && parseResult.value)) return undefined
 

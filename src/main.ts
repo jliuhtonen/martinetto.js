@@ -16,18 +16,20 @@ export interface SubrouterDef {
   router: RouterDef
 }
 
+export type RoutingFn = (currentPath: string, ...args: any[]) => any 
+
 export {linkClickListener, historyListener} from './client'
 
-export function routing(routerDef: RouterDef): (currentPath: string, ...args: any[]) => any {
+export function routing(routerDef: RouterDef): RoutingFn {
   const expandedRoutes: Array<ConcreteRouteDef> = expandRoutes(routerDef)
+  const routeMatchers = expandedRoutes.map(definitionToRoute)
 
-  const routeMatchers = expandedRoutes.map(({route, fn}) => ({
-    match: parse(route),
-    fn
-  }))
+  return createRoutingFn(routeMatchers)
+}
 
-  return function(currentPath, ...args) {
-    const matchingResult = firstMatchingRoute(routeMatchers, currentPath)
+function createRoutingFn(routes: Route[]): RoutingFn {
+  return (currentPath: string, ...args: any[]) => {
+    const matchingResult = firstMatchingRoute(routes, currentPath)
 
     if(matchingResult) {
       const {matcher, result} = matchingResult
@@ -35,6 +37,13 @@ export function routing(routerDef: RouterDef): (currentPath: string, ...args: an
     } else {
       return null
     }
+  }
+}
+
+function definitionToRoute({route, fn}: ConcreteRouteDef): Route {
+  return {
+    match: parse(route),
+    fn
   }
 }
 
