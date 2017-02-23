@@ -6,28 +6,37 @@ export function historyListener<T>(onHistoryChange: (href: string, state: T | un
   }
 }
 
-export function linkClickListener (onClick: (path: string) => void) {
+export function linkClickListener (onClick: (href: string) => void) {
   window.onclick = (e) => {
-    if (e.ctrlKey || e.altKey || e.shiftKey || e.metaKey || e.button && e.button !== 0) {
+    const link = linkToProcess(e)
+    if (!link) {
       return
+    }
+
+    e.preventDefault()
+    onClick(link.href)
+  }
+}
+
+export function linkToProcess(e: MouseEvent): HTMLAnchorElement | undefined {
+    if (e.ctrlKey || e.altKey || e.shiftKey || e.metaKey || e.button && e.button !== 0) {
+      return undefined
     }
 
     const htmlElement = e.target as HTMLElement
 
     const link = traverseWhile(shouldTraverseUp, n => n && n.parentNode as HTMLElement, htmlElement) as HTMLAnchorElement
     if (typeof link === 'undefined' || link === null) {
-      return
+      return undefined
     }
 
     if (link.getAttribute(nonProcessedLinkAttr)) {
-      return
+      return undefined
     }
 
-    e.preventDefault()
-    onClick(link.href)
-    window.history.pushState({}, '', link.href)
-  }
+    return link
 }
+
 
 function shouldTraverseUp(elem: HTMLElement | undefined): boolean {
   if (!elem) {
