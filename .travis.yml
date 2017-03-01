@@ -9,6 +9,7 @@ env:
   global:
     # BROWSERSTACK_KEY="?"
     - secure: "JiMtpVAzHCPqXKBSFKMr3Nq+D1HbacekBRooiFN82pjqc88WXTDMYaEWdd5JVkXdAnvJOxWXBSngpzA7jVDsbxUe3iPkQIZOU5733+BQMVT1spqJUty2SDLMIgjpMAZU3Dai+SQ7iCOpNzdLlIHlg08mfEDqbS4hRX8OF1jY9nvJTON+OdDwznFhpfN2C9EuUwjau9F8owFisodSzURfe0ou6bvsuUcekPo+iGFHsnS4OiKQGdWrFclbXsbeEn9VGSaUMT0OfarW/sxhR/54NVGh0b6onrnYnhwORJ7bUcn4k9IhCuw3/TGM2nA38ec0CwEUmrC2JdD183Ta5xX6LOLi+QPIALsdbt0YGRrxMMicQSu72hIwjKdnOlNbs7ynZAWkK/I5ZCKs1JFH04sVGH9bD8hFTZTtzhL47KjHh0CWBHPgL1KDRPtXoOxLgZ9qrd1enwkL+VktQhJnd0Y7rGZhVjNb9bYL8LSfAFI6Qf9MPAAuj8S+gMnEtqpdNOtw/xr38N6l8Z5ShMTnv9qzmOWXsDj3EKaZLLlFiHMnxlzVIslD2wT2QgJejp6/JAZ+jICinZPvAeL1cYhurg0Qtk4r1qdfrDiUQtkiqjjiGzVmE9axuVaMmf9vdQFbX7TEBvf4wLpUa6K6CYBoBsIgY28dXyVW9mXII0+y5Nijl9M="
+    - CXX=g++-4.8
 matrix:
   include:
     - env: REFRACTIVE_BROWSER_TESTS=true
@@ -16,6 +17,11 @@ matrix:
 before_script:
   - touch .env
 addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-4.8
   browserstack:
     username: 'janneliuhtonen1'
     access_key:
