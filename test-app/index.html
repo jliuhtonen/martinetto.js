@@ -53,6 +53,7 @@ Refractive.linkClickListener(function(url) {
   var path = urlToPath(url)
   console.log('link ' + path)
   console.log(route(path))
+  window.history.pushState({}, '', url)
 })
 
 Refractive.historyListener(function(url) {
