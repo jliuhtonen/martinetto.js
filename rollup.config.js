@@ -4,8 +4,7 @@ import cleanup from 'rollup-plugin-cleanup'
 import uglify from 'rollup-plugin-uglify'
 
 export default {
-  entry: 'dist/main.js',
-  format: 'umd',
+  input: 'dist/main.js',
   plugins: [
     nodeResolve({jsnext: true, main: true}),
     commonjs(),
@@ -13,6 +12,9 @@ export default {
     uglify()
   ],
   exports: 'named',
-  moduleName: 'Refractive',
-  dest: 'dist/bundle.js'
+  name: 'Refractive',
+  output: {
+    file: 'dist/bundle.js',
+    format: 'umd'
+  }
 }
